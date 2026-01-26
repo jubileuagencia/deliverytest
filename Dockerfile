@@ -9,12 +9,16 @@ RUN npm ci
 
 # Copy source code and build
 COPY . .
+RUN ls -la
 # Note: Vite requires environment variables at build time if they are utilized in the code
 # Easypanel usually injects them, but for strict build-time usage, ensure they are set in the Easypanel Environment tab.
 RUN npm run build
 
 # Production Stage
 FROM node:22-alpine
+
+# Set production environment
+ENV NODE_ENV=production
 
 WORKDIR /app
 

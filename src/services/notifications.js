@@ -25,7 +25,7 @@ export const sendCartNotification = async (product) => {
             keepalive: true,
         }).catch(err => console.error('N8n Webhook connection error (expected if CORS issues):', err));
 
-        console.log('Notification sent to N8n:', payload);
+        // console.log('Notification sent to N8n:', payload);
     } catch (error) {
         console.error('Failed to send notification:', error);
     }

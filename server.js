@@ -2,12 +2,33 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import helmet from 'helmet';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+// Security headers
+app.use(
+    helmet({
+        contentSecurityPolicy: {
+            directives: {
+                defaultSrc: ["'self'"],
+                connectSrc: [
+                    "'self'",
+                    "https://qnvlzzprxgragohfwsnc.supabase.co",
+                    "https://jubileuagencia.app.n8n.cloud"
+                ],
+                imgSrc: ["'self'", "data:", "https://qnvlzzprxgragohfwsnc.supabase.co"],
+                scriptSrc: ["'self'", "'unsafe-inline'"],
+                styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+                fontSrc: ["'self'", "https://fonts.gstatic.com"],
+            },
+        },
+    })
+);
 
 // Serve static files from the dist directory
 app.use(express.static(path.join(__dirname, 'dist')));

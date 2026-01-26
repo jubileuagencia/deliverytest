@@ -27,7 +27,7 @@ const AppContent = () => {
   }, [user]);
 
   const handleAddToCart = async (product) => {
-    console.log(`Added ${product.name} to cart`);
+    // console.log(`Added ${product.name} to cart`);
 
     // Optimistic Update / Logic
     setCartItems((prev) => {
