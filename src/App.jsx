@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Header from './components/Header';
 import Home from './pages/Home';
+import CategoryPage from './pages/CategoryPage';
+import ProductPage from './pages/ProductPage';
+import SearchPage from './pages/SearchPage';
 import CartPage from './pages/CartPage';
 import LoginPage from './pages/LoginPage';
-import CartToast from './components/CartToast';
+import CartNotification from './components/CartNotification';
 import { sendCartNotification } from './services/notifications';
 import { fetchCart, addToCartDB, updateQuantityDB, removeFromCartDB, getLocalCart, saveLocalCart } from './services/cart';
 
@@ -13,7 +16,6 @@ import { fetchCart, addToCartDB, updateQuantityDB, removeFromCartDB, getLocalCar
 const AppContent = () => {
   const { user } = useAuth();
   const [cartItems, setCartItems] = useState([]);
-  const [toastMessage, setToastMessage] = useState(null);
 
   // Sync with DB on login or load local cart
   useEffect(() => {
@@ -77,7 +79,6 @@ const AppContent = () => {
       setCartItems(updatedLocalItems);
     }
 
-    setToastMessage(`Adicionado ${product.name} ao carrinho!`);
     sendCartNotification(product);
   };
 
@@ -137,34 +138,61 @@ const AppContent = () => {
   const closeToast = () => setToastMessage(null);
   const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
+  const location = useLocation();
+  const isCartPage = location.pathname === '/carrinho';
+
+  // ... (rest of logic)
+
   return (
-    <Router>
-      <div className="App" style={{ paddingTop: '80px' }}>
-        <Header cartCount={cartCount} />
+    <div className="App" style={{ paddingTop: '80px' }}>
+      <Header cartCount={cartCount} />
 
-        <Routes>
-          <Route path="/" element={<Home onAddToCart={handleAddToCart} />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/carrinho" element={
-            <CartPage
-              cartItems={cartItems}
-              onUpdateQuantity={handleUpdateQuantity}
-              onRemoveItem={handleRemoveItem}
-            />
-          } />
-        </Routes>
+      <Routes>
+        <Route path="/" element={<Home onAddToCart={handleAddToCart} />} />
+        <Route path="/produto/:id" element={
+          <ProductPage
+            onAddToCart={handleAddToCart}
+            cartItems={cartItems}
+            onUpdateQuantity={handleUpdateQuantity}
+            onRemoveItem={handleRemoveItem}
+          />
+        } />
+        <Route path="/categoria/:categoryName" element={<CategoryPage onAddToCart={handleAddToCart} />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/carrinho" element={
+          <CartPage
+            cartItems={cartItems}
+            onUpdateQuantity={handleUpdateQuantity}
+            onRemoveItem={handleRemoveItem}
+          />
+        } />
+        <Route path="/busca" element={
+          <SearchPage
+            onAddToCart={handleAddToCart}
+            cartItems={cartItems}
+            onUpdateQuantity={handleUpdateQuantity}
+            onRemoveItem={handleRemoveItem}
+          />
+        } />
+      </Routes>
 
-        {toastMessage && <CartToast message={toastMessage} onClose={closeToast} />}
-      </div>
-    </Router>
+      {cartItems.length > 0 && !isCartPage && !location.pathname.startsWith('/produto/') && (
+        <CartNotification
+          cartItems={cartItems}
+          hasBottomNav={location.pathname === '/'}
+        />
+      )}
+    </div>
   );
 };
 
 function App() {
   return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
+    <Router>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
+    </Router>
   );
 }
 

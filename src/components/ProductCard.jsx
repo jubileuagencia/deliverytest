@@ -1,15 +1,18 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const ProductCard = ({ product, onAdd }) => {
     return (
         <div style={styles.card}>
-            <div style={styles.imagePlaceholder}>
-                {product.image_url ? (
-                    <img src={product.image_url} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                ) : (
-                    <div style={styles.placeholderText}>Imagem</div>
-                )}
-            </div>
+            <Link to={`/produto/${product.id}`} style={{ textDecoration: 'none' }}>
+                <div style={styles.imagePlaceholder}>
+                    {product.image_url ? (
+                        <img src={product.image_url} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    ) : (
+                        <div style={styles.placeholderText}>Imagem</div>
+                    )}
+                </div>
+            </Link>
             <div style={styles.content}>
                 <div>
                     <h3 style={styles.title}>{product.name}</h3>
@@ -43,7 +46,7 @@ const ProductCard = ({ product, onAdd }) => {
 
 const styles = {
     card: {
-        minWidth: '200px', // Slightly narrower for mobile density
+        minWidth: '150px', // Reduced to fit 2 columns on mobile
         height: '280px',
         display: 'flex',
         flexDirection: 'column',

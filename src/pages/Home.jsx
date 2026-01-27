@@ -1,22 +1,19 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import FeaturedProducts from '../components/FeaturedProducts';
 
 const Home = ({ onAddToCart }) => {
     return (
         <main className="container" style={{ paddingBottom: '80px', paddingTop: '10px' }}>
-            {/* Search Bar */}
-            <div style={styles.searchContainer}>
+            {/* Search Bar - Redirects to SearchPage on interaction */}
+            <div
+                onClick={() => window.location.href = '/busca'}
+                style={{ ...styles.searchContainer, cursor: 'text' }}
+            >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '10px' }}>
                     <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
-                <input
-                    type="text"
-                    placeholder="Buscar produtos frescos..."
-                    style={styles.searchInput}
-                />
-                <button style={styles.filterButton}>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>
-                </button>
+                <span style={{ color: '#9CA3AF', fontSize: '1rem' }}>Buscar produtos frescos...</span>
             </div>
 
             {/* Promo Banner */}
@@ -54,17 +51,37 @@ const Home = ({ onAddToCart }) => {
                 <span style={styles.seeAll}>Ver todas</span>
             </div>
             <FeaturedProducts onAddToCart={onAddToCart} />
+
+            {/* Bottom Navigation */}
+            <div style={styles.bottomNav}>
+                <div style={{ ...styles.navItem, ...styles.activeNavItem }}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                    <span>Início</span>
+                </div>
+                <div style={styles.navItem}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    <span>Pedidos</span>
+                </div>
+                <div style={styles.navItem}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                    <span>Favoritos</span>
+                </div>
+                <div style={styles.navItem}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+                    <span>Painel</span>
+                </div>
+            </div>
         </main>
     );
 };
 
 const CategoryItem = ({ icon, name, color }) => (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+    <Link to={`/categoria/${name}`} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
         <div style={{ ...styles.categoryCircle, backgroundColor: color }}>
             <span style={{ fontSize: '1.5rem' }}>{icon}</span>
         </div>
         <span style={{ fontSize: '0.85rem', fontWeight: '500', color: '#374151' }}>{name}</span>
-    </div>
+    </Link>
 );
 
 const styles = {
@@ -146,6 +163,32 @@ const styles = {
         alignItems: 'center',
         justifyContent: 'center',
         marginBottom: '4px',
+    },
+    bottomNav: {
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        width: '100%',
+        backgroundColor: '#fff',
+        borderTop: '1px solid #E5E7EB',
+        display: 'flex',
+        justifyContent: 'space-around',
+        padding: '12px 0 20px', // Extra padding for safe area
+        zIndex: 1000,
+        boxShadow: '0 -4px 6px -1px rgba(0, 0, 0, 0.05)',
+    },
+    navItem: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '4px',
+        fontSize: '0.7rem',
+        fontWeight: '500',
+        color: '#9CA3AF',
+        cursor: 'pointer',
+    },
+    activeNavItem: {
+        color: '#22C55E', // Green
     }
 };
 
