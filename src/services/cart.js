@@ -89,3 +89,25 @@ export const removeFromCartDB = async (cartItemId) => {
 
     if (error) throw error;
 };
+
+// --- Local Storage Helpers (Guest Cart) ---
+
+const LOCAL_CART_KEY = 'levee_guest_cart';
+
+export const getLocalCart = () => {
+    try {
+        const stored = localStorage.getItem(LOCAL_CART_KEY);
+        return stored ? JSON.parse(stored) : [];
+    } catch (e) {
+        console.error("Failed to parse local cart", e);
+        return [];
+    }
+};
+
+export const saveLocalCart = (items) => {
+    try {
+        localStorage.setItem(LOCAL_CART_KEY, JSON.stringify(items));
+    } catch (e) {
+        console.error("Failed to save local cart", e);
+    }
+};

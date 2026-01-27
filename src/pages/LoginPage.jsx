@@ -26,9 +26,9 @@ const LoginPage = () => {
                 if (user) {
                     // If email confirmation is disabled in Supabase, this logs in immediately.
                     // Otherwise user needs to confirm email.
-                    alert('Check your email for confirmation link if required!');
+                    alert('Verifique seu e-mail para confirmação se necessário!');
                     if (user.identities?.length === 0) {
-                        setError("User already registered. Please login.");
+                        setError("Usuário já registrado. Por favor faça login.");
                     } else {
                         setIsLogin(true); // Switch to login view or keep here
                     }
@@ -44,13 +44,13 @@ const LoginPage = () => {
     return (
         <div className="container" style={styles.page}>
             <div className="glass-panel" style={styles.formContainer}>
-                <h2 style={styles.title}>{isLogin ? 'Welcome Back' : 'Create Account'}</h2>
+                <h2 style={styles.title}>{isLogin ? 'Bem-vindo(a)' : 'Criar Conta'}</h2>
 
                 {error && <div style={styles.error}>{error}</div>}
 
                 <form onSubmit={handleSubmit} style={styles.form}>
                     <div style={styles.inputGroup}>
-                        <label style={styles.label}>Email</label>
+                        <label style={styles.label}>E-mail</label>
                         <input
                             type="email"
                             style={styles.input}
@@ -62,7 +62,7 @@ const LoginPage = () => {
                     </div>
 
                     <div style={styles.inputGroup}>
-                        <label style={styles.label}>Password</label>
+                        <label style={styles.label}>Senha</label>
                         <input
                             type="password"
                             style={styles.input}
@@ -75,14 +75,14 @@ const LoginPage = () => {
                     </div>
 
                     <button type="submit" style={styles.submitButton} disabled={loading}>
-                        {loading ? 'Processing...' : (isLogin ? 'Sign In' : 'Sign Up')}
+                        {loading ? 'Processando...' : (isLogin ? 'Entrar' : 'Cadastrar')}
                     </button>
                 </form>
 
                 <p style={styles.switchText}>
-                    {isLogin ? "Don't have an account? " : "Already have an account? "}
+                    {isLogin ? "Não tem uma conta? " : "Já tem uma conta? "}
                     <button style={styles.switchButton} onClick={() => setIsLogin(!isLogin)}>
-                        {isLogin ? 'Sign Up' : 'Sign In'}
+                        {isLogin ? 'Cadastrar' : 'Entrar'}
                     </button>
                 </p>
             </div>

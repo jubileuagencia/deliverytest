@@ -7,7 +7,7 @@ import CartPage from './pages/CartPage';
 import LoginPage from './pages/LoginPage';
 import CartToast from './components/CartToast';
 import { sendCartNotification } from './services/notifications';
-import { fetchCart, addToCartDB, updateQuantityDB, removeFromCartDB } from './services/cart';
+import { fetchCart, addToCartDB, updateQuantityDB, removeFromCartDB, getLocalCart, saveLocalCart } from './services/cart';
 
 // Wrapper component to access Auth Context
 const AppContent = () => {
@@ -15,97 +15,122 @@ const AppContent = () => {
   const [cartItems, setCartItems] = useState([]);
   const [toastMessage, setToastMessage] = useState(null);
 
-  // Sync with DB on login
+  // Sync with DB on login or load local cart
   useEffect(() => {
     if (user) {
+      // User is logged in: Fetch from DB
       fetchCart(user.id).then(items => {
-        // If we implemented local->remote merge, we'd do it here. 
-        // For now, load DB cart.
         setCartItems(items);
       });
+    } else {
+      // Guest: Load from Local Storage
+      const localItems = getLocalCart();
+      setCartItems(localItems);
     }
   }, [user]);
 
   const handleAddToCart = async (product) => {
-    // console.log(`Added ${product.name} to cart`);
-
-    // Optimistic Update / Logic
+    // Shared Optimistic Update
+    let newItems = [];
     setCartItems((prev) => {
       const existing = prev.find(item => item.id === product.id);
       if (existing) {
-        return prev.map(item =>
+        newItems = prev.map(item =>
           item.id === product.id
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
       } else {
-        return [...prev, { ...product, quantity: 1 }];
+        newItems = [...prev, { ...product, quantity: 1 }];
       }
+      return newItems;
     });
 
-    // DB Update
+    // Persistence Logic
     if (user) {
       try {
         await addToCartDB(user.id, product);
-        // Refresh cart to ensure we have the correct DB IDs and state
+        // We could refetch here, but optimistic update handles the UI immediate feedback
         const updatedItems = await fetchCart(user.id);
         setCartItems(updatedItems);
       } catch (err) {
         console.error("Failed to add to DB cart", err);
       }
+    } else {
+      // Guest: Save to Local Storage immediately
+      // Note: newItems is calculated inside the setter callback above, 
+      // but React state updates are async, so we duplicate the logic or use an effect.
+      // A cleaner way in this function scope:
+      const currentItems = getLocalCart();
+      const existing = currentItems.find(item => item.id === product.id);
+      let updatedLocalItems;
+
+      if (existing) {
+        updatedLocalItems = currentItems.map(item =>
+          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+        );
+      } else {
+        updatedLocalItems = [...currentItems, { ...product, quantity: 1 }];
+      }
+      saveLocalCart(updatedLocalItems);
+      // We also update state to ensure UI sync if the optimistic update above has race conditions
+      setCartItems(updatedLocalItems);
     }
 
-    setToastMessage(`Added ${product.name} to cart!`);
+    setToastMessage(`Adicionado ${product.name} ao carrinho!`);
     sendCartNotification(product);
   };
 
   const handleUpdateQuantity = async (productId, newQuantity) => {
     if (newQuantity < 1) return;
 
-    // Optimistic update
+    // Optimistic Update
     setCartItems(prev => prev.map(item =>
       item.id === productId ? { ...item, quantity: newQuantity } : item
     ));
 
     if (user) {
+      // ... existing DB logic ...
       const item = cartItems.find(i => i.id === productId);
-      // We prioritize refetching to ensure stability, or use the known cart_item_id
       if (item && item.cart_item_id) {
-        try {
-          await updateQuantityDB(item.cart_item_id, newQuantity);
-        } catch (err) {
-          console.error("Failed to update quantity", err);
-        }
+        try { await updateQuantityDB(item.cart_item_id, newQuantity); } catch (e) { console.error(e) }
       } else {
-        // If we don't have the ID yet (race condition), refetch first
+        // Fallback if missing ID
         const freshCart = await fetchCart(user.id);
         const freshItem = freshCart.find(i => i.id === productId);
         if (freshItem) await updateQuantityDB(freshItem.cart_item_id, newQuantity);
       }
-
-      // Ensure sync
-      // fetchCart(user.id).then(setCartItems); // Optional: can enable if highly consistent experience needed
+    } else {
+      // Guest: Update Local Storage
+      const currentItems = getLocalCart();
+      const updatedLocalItems = currentItems.map(item =>
+        item.id === productId ? { ...item, quantity: newQuantity } : item
+      );
+      saveLocalCart(updatedLocalItems);
+      setCartItems(updatedLocalItems);
     }
   };
 
   const handleRemoveItem = async (productId) => {
-    const item = cartItems.find(i => i.id === productId);
+    // Optimistic Update
     setCartItems(prev => prev.filter(i => i.id !== productId));
 
     if (user) {
-      try {
-        if (item && item.cart_item_id) {
-          await removeFromCartDB(item.cart_item_id);
-        } else {
-          const freshCart = await fetchCart(user.id);
-          const freshItem = freshCart.find(i => i.id === productId);
-          if (freshItem) await removeFromCartDB(freshItem.cart_item_id);
-        }
-        // Sync state
-        fetchCart(user.id).then(setCartItems);
-      } catch (err) {
-        console.error("Failed to remove item", err);
+      const item = cartItems.find(i => i.id === productId);
+      if (item && item.cart_item_id) {
+        try { await removeFromCartDB(item.cart_item_id); } catch (e) { console.error(e) }
+      } else {
+        const freshCart = await fetchCart(user.id);
+        const freshItem = freshCart.find(i => i.id === productId);
+        if (freshItem) await removeFromCartDB(freshItem.cart_item_id);
       }
+      fetchCart(user.id).then(setCartItems);
+    } else {
+      // Guest: Remove from Local Storage
+      const currentItems = getLocalCart();
+      const updatedLocalItems = currentItems.filter(item => item.id !== productId);
+      saveLocalCart(updatedLocalItems);
+      setCartItems(updatedLocalItems);
     }
   };
 

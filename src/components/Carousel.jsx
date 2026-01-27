@@ -4,7 +4,6 @@ import ProductCard from './ProductCard';
 const Carousel = ({ products, onAdd }) => {
     return (
         <div style={styles.carouselContainer}>
-            <h2 style={styles.heading} className="container">Recommended For You</h2>
             <div style={styles.scrollArea}>
                 <div style={styles.spacer} /> {/* Left padding spacer */}
                 {products.map((product) => (
@@ -21,7 +20,7 @@ const Carousel = ({ products, onAdd }) => {
 const styles = {
     carouselContainer: {
         width: '100%',
-        padding: '40px 0',
+        padding: '10px 0', // Reduced from 40px
     },
     heading: {
         marginBottom: '20px',
