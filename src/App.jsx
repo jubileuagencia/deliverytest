@@ -10,6 +10,7 @@ import CartPage from './pages/CartPage';
 import LoginPage from './pages/LoginPage';
 import CartNotification from './components/CartNotification';
 import { sendCartNotification } from './services/notifications';
+import ProductDetailsModal from './components/ProductDetailsModal';
 import { fetchCart, addToCartDB, updateQuantityDB, removeFromCartDB, getLocalCart, saveLocalCart } from './services/cart';
 
 // Wrapper component to access Auth Context
@@ -143,12 +144,26 @@ const AppContent = () => {
 
   // ... (rest of logic)
 
+  const [selectedProduct, setSelectedProduct] = useState(null);
+
+  // ... (rest of cart logic)
+
+  const handleProductClick = (product) => {
+    setSelectedProduct(product);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedProduct(null);
+    // Optional: Clear URL param if we implemented that
+  };
+
   return (
     <div className="App" style={{ paddingTop: '80px' }}>
       <Header cartCount={cartCount} />
 
       <Routes>
-        <Route path="/" element={<Home onAddToCart={handleAddToCart} />} />
+        <Route path="/" element={<Home onAddToCart={handleAddToCart} onProductClick={handleProductClick} />} />
+        {/* Kept as fallback or for direct links if we implement URL syncing */}
         <Route path="/produto/:id" element={
           <ProductPage
             onAddToCart={handleAddToCart}
@@ -157,7 +172,7 @@ const AppContent = () => {
             onRemoveItem={handleRemoveItem}
           />
         } />
-        <Route path="/categoria/:categoryName" element={<CategoryPage onAddToCart={handleAddToCart} />} />
+        <Route path="/categoria/:categoryName" element={<CategoryPage onAddToCart={handleAddToCart} onProductClick={handleProductClick} />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/carrinho" element={
           <CartPage
@@ -172,11 +187,24 @@ const AppContent = () => {
             cartItems={cartItems}
             onUpdateQuantity={handleUpdateQuantity}
             onRemoveItem={handleRemoveItem}
+            onProductClick={handleProductClick}
           />
         } />
       </Routes>
 
-      {cartItems.length > 0 && !isCartPage && !location.pathname.startsWith('/produto/') && (
+      {/* Render Global Modal */}
+      {selectedProduct && (
+        <ProductDetailsModal
+          productId={selectedProduct}
+          onClose={handleCloseModal}
+          onAddToCart={handleAddToCart}
+          cartItems={cartItems}
+          onUpdateQuantity={handleUpdateQuantity}
+          onRemoveItem={handleRemoveItem}
+        />
+      )}
+
+      {cartItems.length > 0 && !isCartPage && !location.pathname.startsWith('/produto/') && !selectedProduct && (
         <CartNotification
           cartItems={cartItems}
           hasBottomNav={location.pathname === '/'}

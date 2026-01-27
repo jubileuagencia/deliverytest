@@ -3,7 +3,7 @@ import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import { searchProducts } from '../services/products';
 import ProductCard from '../components/ProductCard';
 
-const SearchPage = ({ onAddToCart, cartItems, onUpdateQuantity, onRemoveItem }) => {
+const SearchPage = ({ onAddToCart, cartItems, onUpdateQuantity, onRemoveItem, onProductClick }) => {
     const [searchParams, setSearchParams] = useSearchParams();
     const initialQuery = searchParams.get('q') || '';
     const navigate = useNavigate();
@@ -103,6 +103,7 @@ const SearchPage = ({ onAddToCart, cartItems, onUpdateQuantity, onRemoveItem }) 
                                         cartItems={cartItems}
                                         onUpdateQuantity={onUpdateQuantity}
                                         onRemoveItem={onRemoveItem}
+                                        onClick={onProductClick}
                                     />
                                 ))}
                             </div>

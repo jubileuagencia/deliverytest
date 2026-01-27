@@ -16,6 +16,20 @@ export const getProducts = async () => {
     return data;
 };
 
+
+export const getCategories = async () => {
+    const { data, error } = await supabase
+        .from('categories')
+        .select('id, name, icon, color')
+        .order('name');
+
+    if (error) {
+        console.error('Error fetching categories:', error);
+        return [];
+    }
+    return data;
+};
+
 export const getProductsByCategory = async (categoryName) => {
     // Join with categories table and filter by category name
     const { data, error } = await supabase

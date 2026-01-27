@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import { getProductsByCategory } from '../services/products';
 
-const CategoryPage = ({ onAddToCart }) => {
+const CategoryPage = ({ onAddToCart, onProductClick }) => {
     const { categoryName } = useParams();
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -22,6 +22,7 @@ const CategoryPage = ({ onAddToCart }) => {
         };
 
         if (categoryName) {
+            window.scrollTo(0, 0); // Ensure page starts at top
             loadProducts();
         }
     }, [categoryName]);
@@ -46,7 +47,7 @@ const CategoryPage = ({ onAddToCart }) => {
                 <div style={styles.grid}>
                     {products.map(product => (
                         <div key={product.id} style={styles.cardWrapper}>
-                            <ProductCard product={product} onAdd={onAddToCart} />
+                            <ProductCard product={product} onAdd={onAddToCart} onClick={onProductClick} />
                         </div>
                     ))}
                 </div>
@@ -83,12 +84,12 @@ const styles = {
     },
     grid: {
         display: 'grid',
-        gridTemplateColumns: 'repeat(2, 1fr)', // 2 Products per row
-        gap: '15px',
-        justifyItems: 'center', // Center items in the cells
+        gridTemplateColumns: 'repeat(2, 1fr)', // Strict 2 columns
+        gap: '12px', // Reduce gap slightly to fit standard phones
+        paddingBottom: '20px',
     },
     cardWrapper: {
-        // Wrapper to ensure card takes full width of grid cell
+        width: '100%',
     }
 };
 

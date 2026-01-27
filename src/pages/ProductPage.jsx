@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { getProductById } from '../services/products';
 
 const ProductPage = ({ onAddToCart, cartItems, onUpdateQuantity, onRemoveItem }) => {
     const { id } = useParams();
+    const navigate = useNavigate();
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -47,11 +48,12 @@ const ProductPage = ({ onAddToCart, cartItems, onUpdateQuantity, onRemoveItem })
     return (
         <div className="container" style={styles.page}>
             {/* Header / Back Button */}
+            {/* Header / Back Button */}
             <div style={styles.header}>
-                <Link to="/" style={styles.backLink}>
+                <button onClick={() => navigate(-1)} style={styles.backLink}>
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5" /><path d="M12 19l-7-7 7-7" /></svg>
                     Voltar
-                </Link>
+                </button>
             </div>
 
             {/* Product Image */}
@@ -133,6 +135,12 @@ const styles = {
         textDecoration: 'none',
         color: '#6B7280',
         fontWeight: '600',
+        background: 'none',
+        border: 'none',
+        cursor: 'pointer',
+        padding: 0,
+        fontFamily: 'inherit',
+        fontSize: '1rem',
     },
     imageContainer: {
         width: '100%',

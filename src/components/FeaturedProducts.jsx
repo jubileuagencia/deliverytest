@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Carousel from './Carousel';
 import { getProducts } from '../services/products';
 
-const FeaturedProducts = ({ onAddToCart }) => {
+const FeaturedProducts = ({ onAddToCart, onProductClick }) => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -29,7 +29,7 @@ const FeaturedProducts = ({ onAddToCart }) => {
         return <div style={{ textAlign: 'center', padding: '50px', color: '#fff' }}>Loading products...</div>;
     }
 
-    return <Carousel products={products} onAdd={onAddToCart} />;
+    return <Carousel products={products} onAdd={onAddToCart} onClick={onProductClick} />;
 };
 
 export default FeaturedProducts;

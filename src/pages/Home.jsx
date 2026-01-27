@@ -1,8 +1,19 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import FeaturedProducts from '../components/FeaturedProducts';
+import { getCategories } from '../services/products';
 
-const Home = ({ onAddToCart }) => {
+const Home = ({ onAddToCart, onProductClick }) => {
+    const [categories, setCategories] = useState([]);
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            const data = await getCategories();
+            if (data) setCategories(data);
+        };
+        fetchCategories();
+    }, []);
+
     return (
         <main className="container" style={{ paddingBottom: '80px', paddingTop: '10px' }}>
             {/* Search Bar - Redirects to SearchPage on interaction */}
@@ -38,10 +49,14 @@ const Home = ({ onAddToCart }) => {
                     <span style={styles.seeAll}>Ver todas</span>
                 </div>
                 <div style={styles.categoryGrid}>
-                    <CategoryItem icon="🍎" name="Frutas" color="#FEF2F2" />
-                    <CategoryItem icon="🥕" name="Legumes" color="#ECFDF5" />
-                    <CategoryItem icon="🥔" name="Raízes" color="#FFFBEB" />
-                    <CategoryItem icon="🥬" name="Orgânicos" color="#F0F9FF" />
+                    {categories.map(category => (
+                        <CategoryItem
+                            key={category.id}
+                            icon={category.icon}
+                            name={category.name}
+                            color={category.color}
+                        />
+                    ))}
                 </div>
             </div>
 
@@ -50,7 +65,7 @@ const Home = ({ onAddToCart }) => {
                 <h3 style={styles.sectionTitle}>Ofertas do Dia</h3>
                 <span style={styles.seeAll}>Ver todas</span>
             </div>
-            <FeaturedProducts onAddToCart={onAddToCart} />
+            <FeaturedProducts onAddToCart={onAddToCart} onProductClick={onProductClick} />
 
             {/* Bottom Navigation */}
             <div style={styles.bottomNav}>
@@ -152,8 +167,8 @@ const styles = {
     categoryGrid: {
         display: 'flex',
         justifyContent: 'space-between',
-        overflowX: 'auto',
-        gap: '12px',
+        width: '100%',
+        padding: '0 5px', // Minimal padding within the flex container
     },
     categoryCircle: {
         width: '64px',
