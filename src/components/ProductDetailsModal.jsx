@@ -52,6 +52,18 @@ const ProductDetailsModal = ({ productId, onClose, onAddToCart, cartItems, onUpd
         }, 300);
     };
 
+    const handleIncrement = () => {
+        onUpdateQuantity(product.id, quantity + 1);
+    };
+
+    const handleDecrement = () => {
+        if (quantity > 1) {
+            onUpdateQuantity(product.id, quantity - 1);
+        } else {
+            onRemoveItem(product.id);
+        }
+    };
+
     // Touch Handlers
     const handleTouchStart = (e) => {
         // Only allow dragging if at top of scroll
