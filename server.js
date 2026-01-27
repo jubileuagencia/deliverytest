@@ -22,7 +22,7 @@ if (process.env.NODE_ENV === 'production') {
                         "https://qnvlzzprxgragohfwsnc.supabase.co",
                         "https://jubileuagencia.app.n8n.cloud"
                     ],
-                    imgSrc: ["'self'", "data:", "https://qnvlzzprxgragohfwsnc.supabase.co"],
+                    imgSrc: ["'self'", "data:", "https://qnvlzzprxgragohfwsnc.supabase.co", "https://images.unsplash.com"],
                     scriptSrc: ["'self'", "'unsafe-inline'"],
                     styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
                     fontSrc: ["'self'", "https://fonts.gstatic.com"],
