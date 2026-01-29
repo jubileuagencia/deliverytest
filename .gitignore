@@ -29,3 +29,6 @@ create_user.js
 verify_supabase.js
 test_n8n.js
 old_keys.txt
+
+.agent/
+.gemini/

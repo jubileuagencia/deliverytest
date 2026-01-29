@@ -64,7 +64,7 @@ const styles = {
         marginBottom: '2px',
     },
     price: {
-        color: '#22C55E',
+        color: 'var(--primary-color)',
         fontWeight: '700',
         fontSize: '0.95rem',
     },

@@ -183,7 +183,7 @@ const styles = {
     price: {
         fontSize: '1.5rem',
         fontWeight: '700',
-        color: '#22C55E', // Green
+        color: 'var(--primary-color)', // Green
     },
     unit: {
         fontSize: '1rem',
@@ -221,7 +221,7 @@ const styles = {
     },
     addButton: {
         width: '100%',
-        backgroundColor: '#22C55E',
+        backgroundColor: 'var(--primary-color)',
         color: '#fff',
         border: 'none',
         padding: '16px',

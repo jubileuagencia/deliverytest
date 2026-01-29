@@ -1,0 +1,35 @@
+.bannerWrapper {
+    background-color: #DCFCE7;
+    /* Green-100 */
+    border-radius: 24px;
+    padding: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+}
+
+.bannerContent {
+    z-index: 1;
+}
+
+.bannerButton {
+    background-color: #111827;
+    /* Black/Gray-900 */
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-top: 8px;
+}
+
+.bannerImagePlaceholder {
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

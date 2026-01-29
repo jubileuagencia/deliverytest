@@ -65,7 +65,7 @@ const styles = {
     totalValue: {
         fontSize: '1.25rem',
         fontWeight: '800',
-        color: '#22C55E', // Primary Green
+        color: 'var(--primary-color)', // Primary Green
     },
     checkoutBtn: {
         width: '100%',

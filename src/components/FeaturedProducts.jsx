@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Carousel from './Carousel';
 import { getProducts } from '../services/products';
+import styles from './FeaturedProducts.module.css';
 
 const FeaturedProducts = ({ onAddToCart, onProductClick }) => {
     const [products, setProducts] = useState([]);
@@ -26,7 +27,7 @@ const FeaturedProducts = ({ onAddToCart, onProductClick }) => {
     }, []);
 
     if (loading) {
-        return <div style={{ textAlign: 'center', padding: '50px', color: '#fff' }}>Loading products...</div>;
+        return <div className={styles.loading}>Loading products...</div>;
     }
 
     return <Carousel products={products} onAdd={onAddToCart} onClick={onProductClick} />;

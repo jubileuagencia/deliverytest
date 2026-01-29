@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import ProductCard from '../components/ProductCard';
+import { useParams } from 'react-router-dom';
 import { getProductsByCategory } from '../services/products';
+import PageHeader from '../components/common/PageHeader';
+import ProductGrid from '../components/products/ProductGrid';
+import styles from './CategoryPage.module.css';
 
-const CategoryPage = ({ onAddToCart, onProductClick }) => {
+const CategoryPage = ({ onAddToCart, onProductClick, cartItems, onUpdateQuantity, onRemoveItem }) => {
     const { categoryName } = useParams();
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -28,69 +30,27 @@ const CategoryPage = ({ onAddToCart, onProductClick }) => {
     }, [categoryName]);
 
     return (
-        <div className="container" style={styles.page}>
-            <div style={styles.header}>
-                <Link to="/" style={styles.backLink}>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5" /><path d="M12 19l-7-7 7-7" /></svg>
-                    Voltar
-                </Link>
-                <h2 style={styles.title}>{categoryName}</h2>
-            </div>
+        <div className={`container ${styles.page}`}>
+            <PageHeader title={categoryName} />
 
             {loading ? (
-                <div style={{ textAlign: 'center', padding: '50px' }}>Carregando...</div>
+                <div className={styles.loading}>Carregando...</div>
             ) : products.length === 0 ? (
-                <div style={{ textAlign: 'center', padding: '50px', color: '#6B7280' }}>
+                <div className={styles.empty}>
                     Nenhum produto encontrado nesta categoria.
                 </div>
             ) : (
-                <div style={styles.grid}>
-                    {products.map(product => (
-                        <div key={product.id} style={styles.cardWrapper}>
-                            <ProductCard product={product} onAdd={onAddToCart} onClick={onProductClick} />
-                        </div>
-                    ))}
-                </div>
+                <ProductGrid
+                    products={products}
+                    onAdd={onAddToCart}
+                    onClick={onProductClick}
+                    cartItems={cartItems}
+                    onUpdateQuantity={onUpdateQuantity}
+                    onRemoveItem={onRemoveItem}
+                />
             )}
         </div>
     );
-};
-
-const styles = {
-    page: {
-        padding: '20px',
-        paddingTop: '40px',
-        minHeight: '100vh',
-    },
-    header: {
-        display: 'flex',
-        alignItems: 'center',
-        gap: '20px',
-        marginBottom: '30px',
-    },
-    backLink: {
-        display: 'flex',
-        alignItems: 'center',
-        gap: '5px',
-        textDecoration: 'none',
-        color: '#6B7280',
-        fontWeight: '600',
-    },
-    title: {
-        fontSize: '2rem',
-        fontWeight: '800',
-        color: '#1F2937',
-        textTransform: 'capitalize',
-    },
-    grid: {
-        display: 'grid',
-        gridTemplateColumns: 'repeat(2, 1fr)', // Strict 2 columns
-        gap: '12px', // Reduce gap slightly to fit standard phones
-        paddingBottom: '20px',
-    },
-    cardWrapper: {
-        width: '100%',
-    }
 };
 
 export default CategoryPage;

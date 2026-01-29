@@ -8,6 +8,7 @@ import ProductPage from './pages/ProductPage';
 import SearchPage from './pages/SearchPage';
 import CartPage from './pages/CartPage';
 import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
 import CartNotification from './components/CartNotification';
 import { sendCartNotification } from './services/notifications';
 import ProductDetailsModal from './components/ProductDetailsModal';
@@ -174,6 +175,7 @@ const AppContent = () => {
         } />
         <Route path="/categoria/:categoryName" element={<CategoryPage onAddToCart={handleAddToCart} onProductClick={handleProductClick} />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/cadastro" element={<RegisterPage />} />
         <Route path="/carrinho" element={
           <CartPage
             cartItems={cartItems}
