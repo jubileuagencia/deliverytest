@@ -6,7 +6,7 @@ const ProductCard = ({ product, onAdd, onClick }) => {
         <div className={styles.card} onClick={() => onClick && onClick(product)}>
             <div className={styles.imagePlaceholder}>
                 {product.image_url ? (
-                    <img src={product.image_url} alt={product.name} className={styles.productImage} />
+                    <img src={product.image_url} alt={product.name} className={styles.productImage} loading="lazy" />
                 ) : (
                     <div className={styles.placeholderText}>Imagem</div>
                 )}

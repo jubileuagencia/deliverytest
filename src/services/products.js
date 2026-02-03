@@ -1,10 +1,16 @@
 import { supabase } from '../lib/supabase';
 
-export const getProducts = async () => {
-    const { data, error } = await supabase
+export const getProducts = async (limit = null) => {
+    let query = supabase
         .from('products')
         .select('*')
         .order('id', { ascending: true });
+
+    if (limit) {
+        query = query.limit(limit);
+    }
+
+    const { data, error } = await query;
 
     if (error) {
         console.error('Error fetching products:', error);
@@ -30,12 +36,16 @@ export const getCategories = async () => {
     return data;
 };
 
-export const getProductsByCategory = async (categoryName) => {
+export const getProductsByCategory = async (categoryName, page = 0, limit = 12) => {
+    const start = page * limit;
+    const end = start + limit - 1;
+
     // Join with categories table and filter by category name
     const { data, error } = await supabase
         .from('products')
         .select('*, categories!inner(name)')
-        .ilike('categories.name', categoryName);
+        .ilike('categories.name', categoryName)
+        .range(start, end);
 
     if (error) {
         console.error(`Error fetching products for category ${categoryName}:`, error);

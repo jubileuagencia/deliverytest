@@ -9,45 +9,85 @@ const CategoryPage = ({ onAddToCart, onProductClick, cartItems, onUpdateQuantity
     const { categoryName } = useParams();
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [page, setPage] = useState(0);
+    const [hasMore, setHasMore] = useState(true);
+    const LIMIT = 12;
 
+    // Reset state when category changes
     useEffect(() => {
-        const loadProducts = async () => {
-            setLoading(true);
-            try {
-                const data = await getProductsByCategory(categoryName);
-                setProducts(data);
-            } catch (error) {
-                console.error("Failed to load category products", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        if (categoryName) {
-            window.scrollTo(0, 0); // Ensure page starts at top
-            loadProducts();
-        }
+        setProducts([]);
+        setPage(0);
+        setHasMore(true);
+        loadProducts(0, true);
     }, [categoryName]);
+
+    const loadProducts = async (pageIndex, isRefresh = false) => {
+        setLoading(true);
+        try {
+            const newProducts = await getProductsByCategory(categoryName, pageIndex, LIMIT);
+
+            if (newProducts.length < LIMIT) {
+                setHasMore(false);
+            }
+
+            if (isRefresh) {
+                setProducts(newProducts);
+            } else {
+                setProducts(prev => [...prev, ...newProducts]);
+            }
+        } catch (error) {
+            console.error("Failed to load category products", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleLoadMore = () => {
+        const nextPage = page + 1;
+        setPage(nextPage);
+        loadProducts(nextPage);
+    };
 
     return (
         <div className={`container ${styles.page}`}>
             <PageHeader title={categoryName} />
 
-            {loading ? (
-                <div className={styles.loading}>Carregando...</div>
-            ) : products.length === 0 ? (
+            {products.length === 0 && !loading ? (
                 <div className={styles.empty}>
                     Nenhum produto encontrado nesta categoria.
                 </div>
             ) : (
-                <ProductGrid
-                    products={products}
-                    onAdd={onAddToCart}
-                    onClick={onProductClick}
-                    cartItems={cartItems}
-                    onUpdateQuantity={onUpdateQuantity}
-                    onRemoveItem={onRemoveItem}
-                />
+                <>
+                    <ProductGrid
+                        products={products}
+                        onAdd={onAddToCart}
+                        onClick={onProductClick}
+                        cartItems={cartItems}
+                        onUpdateQuantity={onUpdateQuantity}
+                        onRemoveItem={onRemoveItem}
+                    />
+
+                    {hasMore && (
+                        <div style={{ display: 'flex', justifyContent: 'center', margin: '2rem 0' }}>
+                            <button
+                                onClick={handleLoadMore}
+                                disabled={loading}
+                                style={{
+                                    padding: '10px 20px',
+                                    backgroundColor: 'var(--primary-color)',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '8px',
+                                    fontSize: '1rem',
+                                    cursor: loading ? 'not-allowed' : 'pointer',
+                                    opacity: loading ? 0.7 : 1
+                                }}
+                            >
+                                {loading ? 'Carregando...' : 'Carregar Mais'}
+                            </button>
+                        </div>
+                    )}
+                </>
             )}
         </div>
     );

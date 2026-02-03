@@ -206,7 +206,7 @@ const AppContent = () => {
         />
       )}
 
-      {cartItems.length > 0 && !isCartPage && !location.pathname.startsWith('/produto/') && !selectedProduct && (
+      {cartItems.length > 0 && !isCartPage && !location.pathname.startsWith('/produto/') && !selectedProduct && location.pathname !== '/cadastro' && location.pathname !== '/login' && (
         <CartNotification
           cartItems={cartItems}
           hasBottomNav={location.pathname === '/'}

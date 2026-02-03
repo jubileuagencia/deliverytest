@@ -10,7 +10,7 @@ const FeaturedProducts = ({ onAddToCart, onProductClick }) => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const data = await getProducts();
+                const data = await getProducts(6);
                 if (data && data.length > 0) {
                     setProducts(data);
                 } else {
