@@ -1,7 +1,11 @@
 import React from 'react';
 import styles from './ProductCard.module.css';
 
+import { useTierPrice } from '../hooks/useTierPrice';
+
 const ProductCard = ({ product, onAdd, onClick }) => {
+    const { finalPrice, discountApplied, originalPrice } = useTierPrice(product.price);
+
     return (
         <div className={styles.card} onClick={() => onClick && onClick(product)}>
             <div className={styles.imagePlaceholder}>
@@ -23,7 +27,16 @@ const ProductCard = ({ product, onAdd, onClick }) => {
                 </div>
 
                 <div className={styles.footer}>
-                    <span className={styles.price}>R$ {product.price.toFixed(2).replace('.', ',')}</span>
+                    <div className={styles.priceContainer}>
+                        {discountApplied && (
+                            <span className={styles.oldPrice}>
+                                R$ {originalPrice.toFixed(2).replace('.', ',')}
+                            </span>
+                        )}
+                        <span className={styles.price}>
+                            R$ {finalPrice.toFixed(2).replace('.', ',')}
+                        </span>
+                    </div>
                     <button
                         className={styles.addButton}
                         onClick={(e) => {

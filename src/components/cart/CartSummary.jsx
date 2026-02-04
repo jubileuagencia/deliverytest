@@ -1,8 +1,13 @@
 import React from 'react';
 
-const CartSummary = ({ subtotal, onCheckout }) => {
+const CartSummary = ({ totals, onCheckout }) => {
     const deliveryFee = 5.00; // Fixed for now
-    const total = subtotal + deliveryFee;
+
+    // Fallback if totals not yet loaded
+    const subtotal = totals?.subtotal || 0;
+    const discount = totals?.discount || 0;
+    const totalBeforeDelivery = totals?.total || 0;
+    const finalTotal = totalBeforeDelivery + deliveryFee;
 
     return (
         <div className="cart-summary">
@@ -10,19 +15,30 @@ const CartSummary = ({ subtotal, onCheckout }) => {
 
             <div style={styles.row}>
                 <span style={styles.label}>Subtotal</span>
-                <span style={styles.value}>${subtotal.toFixed(2)}</span>
+                <span style={styles.value}>R$ {subtotal.toFixed(2).replace('.', ',')}</span>
             </div>
+
+            {discount > 0 && (
+                <div style={styles.row}>
+                    <span style={{ ...styles.label, color: 'var(--primary-color)' }}>
+                        Desconto ({totals.tier === 'silver' ? 'Prata' : 'Ouro'})
+                    </span>
+                    <span style={{ ...styles.value, color: 'var(--primary-color)' }}>
+                        - R$ {discount.toFixed(2).replace('.', ',')}
+                    </span>
+                </div>
+            )}
 
             <div style={styles.row}>
                 <span style={styles.label}>Taxa de Entrega</span>
-                <span style={styles.value}>${deliveryFee.toFixed(2)}</span>
+                <span style={styles.value}>R$ {deliveryFee.toFixed(2).replace('.', ',')}</span>
             </div>
 
             <div style={styles.divider} />
 
             <div style={styles.row}>
                 <span style={styles.totalLabel}>Total</span>
-                <span style={styles.totalValue}>${total.toFixed(2)}</span>
+                <span style={styles.totalValue}>R$ {finalTotal.toFixed(2).replace('.', ',')}</span>
             </div>
 
             <button style={styles.checkoutBtn} onClick={onCheckout}>

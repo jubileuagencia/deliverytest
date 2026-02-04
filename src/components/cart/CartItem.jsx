@@ -1,5 +1,24 @@
 import React from 'react';
 
+import { useTierPrice } from '../../hooks/useTierPrice';
+
+const CartItemPrice = ({ price }) => {
+    const { finalPrice, discountApplied, originalPrice } = useTierPrice(price);
+
+    return (
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+            {discountApplied && (
+                <span style={{ fontSize: '0.8rem', color: '#9CA3AF', textDecoration: 'line-through' }}>
+                    R$ {originalPrice.toFixed(2).replace('.', ',')}
+                </span>
+            )}
+            <span style={styles.price}>
+                R$ {finalPrice.toFixed(2).replace('.', ',')}
+            </span>
+        </div>
+    );
+};
+
 const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
     return (
         <div className="cart-item">
@@ -13,7 +32,7 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
 
             <div style={styles.info}>
                 <h3 style={styles.title}>{item.name}</h3>
-                <p style={styles.price}>${Number(item.price).toFixed(2)}</p>
+                <CartItemPrice price={item.price} />
                 {item.description && <p style={styles.desc}>{item.description}</p>}
             </div>
 

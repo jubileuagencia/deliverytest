@@ -4,8 +4,57 @@ import CartItem from '../components/cart/CartItem';
 import CartSummary from '../components/cart/CartSummary';
 import styles from './CartPage.module.css';
 
+import { getAppConfig } from '../services/config';
+import { supabase } from '../lib/supabase';
+import { useState, useEffect } from 'react';
+
 const CartPage = ({ cartItems, onUpdateQuantity, onRemoveItem }) => {
-    const subtotal = cartItems.reduce((sum, item) => sum + (Number(item.price) * item.quantity), 0);
+    // Totals State
+    const [totals, setTotals] = useState({
+        subtotal: 0,
+        discount: 0,
+        total: 0,
+        loading: true
+    });
+
+    // Calculate totals based on tier
+    useEffect(() => {
+        const calculateTotals = async () => {
+            // 1. Calculate Base Subtotal
+            const baseSubtotal = cartItems.reduce((sum, item) => sum + (Number(item.price) * item.quantity), 0);
+
+            // 2. Fetch Config & User Tier
+            // Optimization: Ideally this comes from context, but repeating logic for safety here
+            const { data: { user } } = await supabase.auth.getUser();
+            let tier = 'bronze';
+
+            if (user) {
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('tier')
+                    .eq('id', user.id)
+                    .single();
+                if (profile) tier = profile.tier;
+            }
+
+            const config = await getAppConfig('tier_discounts');
+            const discountPercent = (config && config[tier]) || 0;
+
+            // 3. Apply Discount
+            const discountAmount = baseSubtotal * discountPercent;
+            const finalTotal = baseSubtotal - discountAmount;
+
+            setTotals({
+                subtotal: baseSubtotal,
+                discount: discountAmount,
+                total: finalTotal,
+                tier: tier,
+                loading: false
+            });
+        };
+
+        calculateTotals();
+    }, [cartItems]);
 
     const handleCheckout = () => {
         alert('Proceeding to checkout...');
@@ -36,7 +85,7 @@ const CartPage = ({ cartItems, onUpdateQuantity, onRemoveItem }) => {
                         ))}
                     </div>
 
-                    <CartSummary subtotal={subtotal} onCheckout={handleCheckout} />
+                    <CartSummary totals={totals} onCheckout={handleCheckout} />
                 </div>
             )}
         </div>

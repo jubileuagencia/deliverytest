@@ -1,6 +1,38 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { getProductById } from '../services/products';
 import styles from './ProductDetailsModal.module.css';
+import { useTierPrice } from '../hooks/useTierPrice';
+
+const PriceDisplay = ({ price }) => {
+    const { finalPrice, discountApplied, originalPrice } = useTierPrice(price);
+
+    return (
+        <div className={styles.priceContainer}>
+            {discountApplied && (
+                <span className={styles.oldPrice}>
+                    R$ {originalPrice.toFixed(2).replace('.', ',')}
+                </span>
+            )}
+            <div className={styles.priceWrapper}>
+                <span className={styles.price}>R$ {finalPrice.toFixed(2).replace('.', ',')}</span>
+                <span className={styles.unit}>/ unidade</span>
+            </div>
+        </div>
+    );
+};
+
+const AddToCartButton = ({ product, quantity, onAddToCart }) => {
+    const { finalPrice } = useTierPrice(product.price);
+
+    return (
+        <button
+            className={styles.addButton}
+            onClick={() => onAddToCart(product)}
+        >
+            Adicionar à Sacola - R$ {finalPrice.toFixed(2).replace('.', ',')}
+        </button>
+    );
+};
 
 const ProductDetailsModal = ({ productId, onClose, onAddToCart, cartItems, onUpdateQuantity, onRemoveItem }) => {
     const [product, setProduct] = useState(null);
@@ -146,10 +178,7 @@ const ProductDetailsModal = ({ productId, onClose, onAddToCart, cartItems, onUpd
                             <div className={styles.detailsBody}>
                                 <div className={styles.detailsHeader}>
                                     <h1 className={styles.title}>{product.name}</h1>
-                                    <div className={styles.priceContainer}>
-                                        <span className={styles.price}>R$ {product.price.toFixed(2).replace('.', ',')}</span>
-                                        <span className={styles.unit}>/ unidade</span>
-                                    </div>
+                                    <PriceDisplay price={product.price} />
                                 </div>
 
                                 <div className={styles.section}>
@@ -175,12 +204,7 @@ const ProductDetailsModal = ({ productId, onClose, onAddToCart, cartItems, onUpd
                         {/* Fixed Bottom Action Bar */}
                         <div className={styles.actionBar}>
                             {quantity === 0 ? (
-                                <button
-                                    className={styles.addButton}
-                                    onClick={() => onAddToCart(product)}
-                                >
-                                    Adicionar à Sacola - R$ {product.price.toFixed(2).replace('.', ',')}
-                                </button>
+                                <AddToCartButton product={product} quantity={quantity} onAddToCart={onAddToCart} />
                             ) : (
                                 <div className={styles.quantityControl}>
                                     <button className={styles.qtyButton} onClick={handleDecrement}>

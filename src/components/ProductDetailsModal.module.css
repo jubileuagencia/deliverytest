@@ -134,6 +134,19 @@
 
 .priceContainer {
     display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+}
+
+.oldPrice {
+    font-size: 1rem;
+    color: #9CA3AF;
+    text-decoration: line-through;
+}
+
+.priceWrapper {
+    display: flex;
     align-items: baseline;
     gap: 8px;
 }

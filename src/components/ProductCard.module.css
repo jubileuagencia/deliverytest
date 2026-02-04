@@ -80,10 +80,25 @@
     margin-top: 8px;
 }
 
+.priceContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.oldPrice {
+    font-size: 0.75rem;
+    color: #9CA3AF;
+    text-decoration: line-through;
+    line-height: 1;
+    margin-bottom: 2px;
+}
+
 .price {
     font-size: 1.1rem;
     color: var(--primary-color);
     font-weight: 700;
+    line-height: 1.1;
 }
 
 .addButton {
