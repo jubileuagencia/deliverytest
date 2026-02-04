@@ -7,8 +7,10 @@ import styles from './CartPage.module.css';
 import { getAppConfig } from '../services/config';
 import { supabase } from '../lib/supabase';
 import { useState, useEffect } from 'react';
+import { useCart } from '../context/CartContext';
 
-const CartPage = ({ cartItems, onUpdateQuantity, onRemoveItem }) => {
+const CartPage = () => {
+    const { cartItems, updateQuantity, removeFromCart } = useCart();
     // Totals State
     const [totals, setTotals] = useState({
         subtotal: 0,
@@ -79,8 +81,8 @@ const CartPage = ({ cartItems, onUpdateQuantity, onRemoveItem }) => {
                             <CartItem
                                 key={item.id}
                                 item={item}
-                                onUpdateQuantity={onUpdateQuantity}
-                                onRemove={onRemoveItem}
+                                onUpdateQuantity={updateQuantity}
+                                onRemove={removeFromCart}
                             />
                         ))}
                     </div>

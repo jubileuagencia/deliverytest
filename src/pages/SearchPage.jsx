@@ -2,12 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import { searchProducts } from '../services/products';
 import ProductGrid from '../components/products/ProductGrid';
+import { useCart } from '../context/CartContext';
 import styles from './SearchPage.module.css';
 
-const SearchPage = ({ onAddToCart, cartItems, onUpdateQuantity, onRemoveItem, onProductClick }) => {
+const SearchPage = ({ onProductClick }) => {
     const [searchParams, setSearchParams] = useSearchParams();
     const initialQuery = searchParams.get('q') || '';
     const navigate = useNavigate();
+
+    const { addToCart, cartItems, updateQuantity, removeFromCart } = useCart();
 
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -97,11 +100,11 @@ const SearchPage = ({ onAddToCart, cartItems, onUpdateQuantity, onRemoveItem, on
                         ) : (
                             <ProductGrid
                                 products={products}
-                                onAdd={onAddToCart}
+                                onAdd={addToCart}
                                 onClick={onProductClick}
                                 cartItems={cartItems}
-                                onUpdateQuantity={onUpdateQuantity}
-                                onRemoveItem={onRemoveItem}
+                                onUpdateQuantity={updateQuantity}
+                                onRemoveItem={removeFromCart}
                             />
                         )}
                     </>

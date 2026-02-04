@@ -4,14 +4,17 @@ import { getProductsByCategory } from '../services/products';
 import PageHeader from '../components/common/PageHeader';
 import ProductGrid from '../components/products/ProductGrid';
 import styles from './CategoryPage.module.css';
+import { useCart } from '../context/CartContext';
 
-const CategoryPage = ({ onAddToCart, onProductClick, cartItems, onUpdateQuantity, onRemoveItem }) => {
+const CategoryPage = ({ onProductClick }) => {
     const { categoryName } = useParams();
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(0);
     const [hasMore, setHasMore] = useState(true);
     const LIMIT = 12;
+
+    const { addToCart, cartItems, updateQuantity, removeFromCart } = useCart();
 
     // Reset state when category changes
     useEffect(() => {
@@ -60,11 +63,11 @@ const CategoryPage = ({ onAddToCart, onProductClick, cartItems, onUpdateQuantity
                 <>
                     <ProductGrid
                         products={products}
-                        onAdd={onAddToCart}
+                        onAdd={addToCart}
                         onClick={onProductClick}
                         cartItems={cartItems}
-                        onUpdateQuantity={onUpdateQuantity}
-                        onRemoveItem={onRemoveItem}
+                        onUpdateQuantity={updateQuantity}
+                        onRemoveItem={removeFromCart}
                     />
 
                     {hasMore && (

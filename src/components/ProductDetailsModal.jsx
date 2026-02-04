@@ -2,6 +2,9 @@ import React, { useEffect, useState, useRef } from 'react';
 import { getProductById } from '../services/products';
 import styles from './ProductDetailsModal.module.css';
 import { useTierPrice } from '../hooks/useTierPrice';
+import { useCart } from '../context/CartContext';
+import { useFavorites } from '../context/FavoritesContext';
+import { useAuth } from '../context/AuthContext';
 
 const PriceDisplay = ({ price }) => {
     const { finalPrice, discountApplied, originalPrice } = useTierPrice(price);
@@ -34,10 +37,29 @@ const AddToCartButton = ({ product, quantity, onAddToCart }) => {
     );
 };
 
-const ProductDetailsModal = ({ productId, onClose, onAddToCart, cartItems, onUpdateQuantity, onRemoveItem }) => {
+const ProductDetailsModal = ({ productId, onClose }) => {
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [closing, setClosing] = useState(false);
+
+    const { addToCart, cartItems, updateQuantity, removeFromCart } = useCart();
+    const { isFavorite, toggleFavorite } = useFavorites();
+    const { user } = useAuth(); // Need to access auth context or just check user in toggleFavorite but checking user here allows redirect
+    // Assuming useAuth isn't imported yet or we can use the context
+    // Wait, I imported it in previous step.
+
+    const handleToggleFavorite = (e) => {
+        e.stopPropagation();
+        // Determine navigate or window location if navigate not available? 
+        // ProductDetailsModal usually is inside Router so useNavigate should work if imported, 
+        // but let's check imports. logic:
+        if (toggleFavorite(product?.id) === false) { // If it returns false (blocked)
+            // ideally redirect, but we need navigate. 
+            // For now let's just use window.location or simply ignore if logic is inside context.
+            // Actually create context handles the "return false" if no user.
+            // Let's rely on user check here.
+        }
+    };
 
     // Gesture State
     const [dragY, setDragY] = useState(0);
@@ -86,14 +108,14 @@ const ProductDetailsModal = ({ productId, onClose, onAddToCart, cartItems, onUpd
     };
 
     const handleIncrement = () => {
-        onUpdateQuantity(product.id, quantity + 1);
+        updateQuantity(product.id, quantity + 1);
     };
 
     const handleDecrement = () => {
         if (quantity > 1) {
-            onUpdateQuantity(product.id, quantity - 1);
+            updateQuantity(product.id, quantity - 1);
         } else {
-            onRemoveItem(product.id);
+            removeFromCart(product.id);
         }
     };
 
@@ -172,6 +194,20 @@ const ProductDetailsModal = ({ productId, onClose, onAddToCart, cartItems, onUpd
                                     <div className={styles.placeholder}>🥦</div>
                                 )}
 
+                                <button className={styles.favoriteButton} onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (!user) {
+                                        // rudimentary redirect if no navigate
+                                        window.location.href = '/login';
+                                        return;
+                                    }
+                                    toggleFavorite(product.id);
+                                }}>
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill={isFavorite(product.id) ? "#EF4444" : "none"} stroke={isFavorite(product.id) ? "#EF4444" : "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                    </svg>
+                                </button>
+
                                 <div className={styles.imageOverlay} />
                             </div>
 
@@ -204,7 +240,7 @@ const ProductDetailsModal = ({ productId, onClose, onAddToCart, cartItems, onUpd
                         {/* Fixed Bottom Action Bar */}
                         <div className={styles.actionBar}>
                             {quantity === 0 ? (
-                                <AddToCartButton product={product} quantity={quantity} onAddToCart={onAddToCart} />
+                                <AddToCartButton product={product} quantity={quantity} onAddToCart={addToCart} />
                             ) : (
                                 <div className={styles.quantityControl}>
                                     <button className={styles.qtyButton} onClick={handleDecrement}>

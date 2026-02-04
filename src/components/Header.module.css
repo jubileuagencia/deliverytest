@@ -120,3 +120,55 @@
 .arrowIcon {
     margin-left: 4px;
 }
+
+@media (max-width: 640px) {
+    .header {
+        height: 70px;
+    }
+
+    .container {
+        padding: 0 12px;
+    }
+
+    .locationLabel {
+        font-size: 0.65rem;
+    }
+
+    .locationValue {
+        font-size: 0.85rem;
+        max-width: 140px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .iconButtonBase {
+        width: 36px;
+        height: 36px;
+    }
+
+    .rightActions {
+        gap: 8px;
+    }
+
+    .loginLink {
+        font-size: 0.75rem;
+        padding: 0 8px !important;
+        /* Override inline style if possible, or expect component update */
+    }
+}
+
+@media (max-width: 380px) {
+    .locationValue {
+        max-width: 100px;
+    }
+
+    /* Hide the text of the login link on very small screens if needed, 
+       but keeping it compact is better for now as requested */
+    .loginLink {
+        max-width: 100px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}

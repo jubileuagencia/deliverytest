@@ -1,22 +1,31 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
 import styles from './Header.module.css';
+import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
+import { Link, useNavigate } from 'react-router-dom';
 
-const Header = ({ cartCount }) => {
-  const { user, logout } = useAuth();
+const Header = () => {
+  const { user, signOut } = useAuth();
+  const { cartItems } = useCart();
   const navigate = useNavigate();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
   const handleLogout = async () => {
-    await logout();
+    await signOut();
+    setIsMenuOpen(false);
     navigate('/login');
   };
 
   return (
     <header className={styles.header}>
-      <div className={`container ${styles.container}`}>
-
-        {/* Location Selector (Left) */}
+      <div className={styles.container}>
+        {/* Location (Left) */}
         <div className={styles.locationWrapper}>
           <span className={styles.locationLabel}>Sede de Entrega</span>
           <div className={styles.locationValue}>
@@ -25,9 +34,8 @@ const Header = ({ cartCount }) => {
           </div>
         </div>
 
-        {/* Right Actions */}
+        {/* Right Actions (Bell, Cart, Auth) */}
         <div className={styles.rightActions}>
-
           {/* Notification Bell */}
           <button className={styles.iconButton}>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -36,28 +44,50 @@ const Header = ({ cartCount }) => {
             <span className={styles.notifBadge}></span>
           </button>
 
-          {/* Cart */}
+          {/* Cart Button (Green) */}
           <Link to="/carrinho" className={styles.cartButton}>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="9" cy="21" r="1"></circle>
               <circle cx="20" cy="21" r="1"></circle>
               <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
             </svg>
+            {/* Always show cart count if > 0 */}
             {cartCount > 0 && <span className={styles.badge}>{cartCount}</span>}
           </Link>
 
-          {/* Profile/Logout (Simplified for Mobile view) */}
+          {/* Login / Profile */}
           {user ? (
-            <button onClick={handleLogout} className={styles.logoutButton}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" x2="9" y1="12" y2="12" /></svg>
-            </button>
+            <div className={styles.userSection} onClick={toggleMenu} style={{ cursor: 'pointer' }}>
+              {/* Simple avatar or text for now, using the styling available */}
+              <span className={styles.loginLink} style={{ background: '#F3F4F6', color: '#374151', width: 'auto', padding: '0 12px' }}>
+                {user.email?.split('@')[0]}
+              </span>
+            </div>
           ) : (
-            <Link to="/login" className={styles.loginLink}>
+            <Link to="/login" className={styles.loginLink} style={{ width: 'auto', padding: '0 16px' }}>
               Entrar
             </Link>
           )}
         </div>
       </div>
+
+      {/* Mobile Menu Overlay - Kept for reference but hidden in this design unless we add back the hamburger */}
+      {isMenuOpen && (
+        <div className={styles.menuOverlay}>
+          <div className={styles.menuContent}>
+            <button className={styles.closeButton} onClick={toggleMenu}>&times;</button>
+            <nav className={styles.navLinks}>
+              <Link to="/" onClick={toggleMenu}>Início</Link>
+              <Link to="/carrinho" onClick={toggleMenu}>Carrinho</Link>
+              {user ? (
+                <button onClick={handleLogout} className={styles.logoutButton}>Sair</button>
+              ) : (
+                <Link to="/login" onClick={toggleMenu} className={styles.loginLink}>Entrar</Link>
+              )}
+            </nav>
+          </div>
+        </div>
+      )}
     </header>
   );
 };

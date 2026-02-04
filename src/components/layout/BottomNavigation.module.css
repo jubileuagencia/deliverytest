@@ -22,6 +22,9 @@
     font-weight: 500;
     color: #9CA3AF;
     cursor: pointer;
+    text-decoration: none;
+    background: transparent;
+    border: none;
 }
 
 .activeNavItem {

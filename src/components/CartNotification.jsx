@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './CartNotification.module.css';
 
 import { getAppConfig } from '../services/config';
 import { supabase } from '../lib/supabase';
-import { useState, useEffect } from 'react';
+import { useCart } from '../context/CartContext';
 
-const CartNotification = ({ cartItems, onClose, hasBottomNav }) => {
+const CartNotification = ({ onClose, hasBottomNav }) => {
+    const { cartItems } = useCart();
     const itemCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
     const [displayTotal, setDisplayTotal] = useState(0);
 

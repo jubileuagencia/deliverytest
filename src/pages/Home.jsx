@@ -6,9 +6,11 @@ import PromoBanner from '../components/home/PromoBanner';
 import CategorySection from '../components/home/CategorySection';
 import BottomNavigation from '../components/layout/BottomNavigation';
 import styles from './Home.module.css';
+import { useCart } from '../context/CartContext';
 
-const Home = ({ onAddToCart, onProductClick }) => {
+const Home = ({ onProductClick }) => {
     const [categories, setCategories] = useState([]);
+    const { addToCart } = useCart();
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -29,7 +31,7 @@ const Home = ({ onAddToCart, onProductClick }) => {
                 <h3 className={styles.sectionTitle}>Ofertas do Dia</h3>
                 <span className={styles.seeAll}>Ver todas</span>
             </div>
-            <FeaturedProducts onAddToCart={onAddToCart} onProductClick={onProductClick} />
+            <FeaturedProducts onAddToCart={addToCart} onProductClick={onProductClick} />
 
             <BottomNavigation />
         </main>

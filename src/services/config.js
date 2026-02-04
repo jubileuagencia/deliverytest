@@ -38,7 +38,7 @@ export const subscribeToConfigChanges = (key, callback) => {
                 filter: `key=eq.${key}`,
             },
             (payload) => {
-                console.log('Real-time config update:', payload.new.value);
+
                 // Update cache
                 configCache[key] = payload.new.value;
                 // Notify

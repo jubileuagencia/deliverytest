@@ -19,7 +19,7 @@ export const ConfigProvider = ({ children }) => {
         try {
             const discounts = await getAppConfig('tier_discounts');
             if (discounts) {
-                console.log('🔄 Config Refetched:', discounts);
+
                 setConfig(prev => ({ ...prev, tier_discounts: discounts }));
             }
         } catch (error) {
@@ -35,7 +35,7 @@ export const ConfigProvider = ({ children }) => {
 
         // 2. Realtime Subscription (Best Effort)
         const subscription = subscribeToConfigChanges('tier_discounts', (newDiscounts) => {
-            console.log('⚡ Context Realtime Update:', newDiscounts);
+
             setConfig(prev => ({ ...prev, tier_discounts: newDiscounts }));
         });
 

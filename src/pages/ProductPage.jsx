@@ -1,12 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { getProductById } from '../services/products';
+import { useCart } from '../context/CartContext';
+import { useFavorites } from '../context/FavoritesContext';
+import { useAuth } from '../context/AuthContext';
 
-const ProductPage = ({ onAddToCart, cartItems, onUpdateQuantity, onRemoveItem }) => {
+const ProductPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
+
+    const { addToCart, cartItems, updateQuantity, removeFromCart } = useCart();
+    const { isFavorite, toggleFavorite } = useFavorites();
+    const { user } = useAuth();
+
+    const handleToggleFavorite = (e) => {
+        e.stopPropagation();
+        if (!user) {
+            navigate('/login');
+            return;
+        }
+        toggleFavorite(product.id);
+    };
 
     const cartItem = cartItems?.find(item => item.id === product?.id);
     const quantity = cartItem ? cartItem.quantity : 0;
@@ -31,14 +47,14 @@ const ProductPage = ({ onAddToCart, cartItems, onUpdateQuantity, onRemoveItem })
     }, [id]);
 
     const handleIncrement = () => {
-        onUpdateQuantity(product.id, quantity + 1);
+        updateQuantity(product.id, quantity + 1);
     };
 
     const handleDecrement = () => {
         if (quantity > 1) {
-            onUpdateQuantity(product.id, quantity - 1);
+            updateQuantity(product.id, quantity - 1);
         } else {
-            onRemoveItem(product.id);
+            removeFromCart(product.id);
         }
     };
 
@@ -63,6 +79,11 @@ const ProductPage = ({ onAddToCart, cartItems, onUpdateQuantity, onRemoveItem })
                 ) : (
                     <div style={styles.placeholder}>🥦</div>
                 )}
+                <button style={styles.favoriteButton} onClick={handleToggleFavorite}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill={isFavorite(product.id) ? "#EF4444" : "none"} stroke={isFavorite(product.id) ? "#EF4444" : "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                    </svg>
+                </button>
             </div>
 
             {/* Product Details */}
@@ -95,8 +116,8 @@ const ProductPage = ({ onAddToCart, cartItems, onUpdateQuantity, onRemoveItem })
             <div style={styles.actionBar}>
                 {quantity === 0 ? (
                     <button
-                        style={styles.addButton}
-                        onClick={() => onAddToCart(product)}
+                        className={styles.addButton}
+                        onClick={() => addToCart(product)}
                     >
                         Adicionar à Sacola - R$ {product.price.toFixed(2).replace('.', ',')}
                     </button>
@@ -150,6 +171,23 @@ const styles = {
         boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)',
         marginBottom: '24px',
         backgroundColor: '#F3F4F6',
+        position: 'relative', // Needed for absolute positioning
+    },
+    favoriteButton: {
+        position: 'absolute',
+        top: '16px',
+        right: '16px',
+        width: '40px',
+        height: '40px',
+        borderRadius: '50%',
+        backgroundColor: '#FFFFFF',
+        border: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+        cursor: 'pointer',
+        zIndex: 10,
     },
     image: {
         width: '100%',
