@@ -34,3 +34,4 @@ old_keys.txt
 .gemini/
 scripts/
 .env
+database/
