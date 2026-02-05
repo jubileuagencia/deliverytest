@@ -1,11 +1,19 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import RegisterForm from '../components/auth/RegisterForm';
 import styles from './LoginPage.module.css'; // Reusing Login Page layout styles
 
 const RegisterPage = () => {
     const navigate = useNavigate();
+    const { user, loading } = useAuth();
+
+    useEffect(() => {
+        if (!loading && user) {
+            navigate('/');
+        }
+    }, [user, loading, navigate]);
 
     const handleSuccess = () => {
         alert("Cadastro realizado com sucesso! Verifique seu e-mail.");

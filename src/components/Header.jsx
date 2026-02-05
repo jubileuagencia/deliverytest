@@ -5,7 +5,7 @@ import { useCart } from '../context/CartContext';
 import { Link, useNavigate } from 'react-router-dom';
 
 const Header = () => {
-  const { user, signOut } = useAuth();
+  const { user, logout } = useAuth();
   const { cartItems } = useCart();
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -17,7 +17,7 @@ const Header = () => {
   };
 
   const handleLogout = async () => {
-    await signOut();
+    await logout();
     setIsMenuOpen(false);
     navigate('/login');
   };

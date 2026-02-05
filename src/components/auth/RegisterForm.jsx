@@ -81,32 +81,12 @@ const RegisterForm = ({ onSuccess }) => {
         setLoading(true);
 
         try {
-            // 1. Create Auth User
-            const { data: { user }, error: authError } = await supabase.auth.signUp({
-                email: formData.email,
-                password: formData.password,
-            });
-
-            if (authError) throw authError;
-            if (!user) throw new Error("Erro ao criar usuário.");
-
-            // 2. Create Profile (B2B Data)
-            const { error: profileError } = await supabase
-                .from('profiles')
-                .insert({
-                    id: user.id,
-                    company_name: formData.companyName,
-                    cnpj: cleanDigits(formData.cnpj),
-                    phone: cleanDigits(formData.phone)
-                });
-
-            if (profileError) throw profileError;
-
-            // 3. Create Address
-            const { error: addressError } = await supabase
-                .from('addresses')
-                .insert({
-                    profile_id: user.id, // Using same ID as profile
+            // Prepared Metadata for Trigger
+            const metadata = {
+                company_name: formData.companyName,
+                cnpj: cleanDigits(formData.cnpj),
+                phone: cleanDigits(formData.phone),
+                address: {
                     cep: cleanDigits(formData.cep),
                     street: formData.street,
                     number: formData.number,
@@ -115,16 +95,26 @@ const RegisterForm = ({ onSuccess }) => {
                     city: formData.city,
                     state: formData.state,
                     is_main: formData.isMain
-                });
+                }
+            };
 
-            if (addressError) {
-                // Non-blocking error for address (can retry later) but good to know
-                console.error("Address error", addressError);
-            }
+            // 1. Create Auth User with Metadata
+            // The DB Trigger 'handle_new_user' will automatically create Profile and Address
+            const { data: { user }, error: authError } = await supabase.auth.signUp({
+                email: formData.email,
+                password: formData.password,
+                options: {
+                    data: metadata
+                }
+            });
+
+            if (authError) throw authError;
+            if (!user) throw new Error("Erro ao criar usuário.");
 
             if (onSuccess) onSuccess();
 
         } catch (err) {
+            console.error("Registration error:", err);
             setError(err.message);
         } finally {
             setLoading(false);
