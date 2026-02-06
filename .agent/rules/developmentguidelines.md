@@ -51,6 +51,36 @@ Ao receber um pedido de alteração em uma página ou componente existente:
     *   `Fixed`: Correção de bugs.
     *   `Removed`: Funcionalidades removidas.
 
+    *   `Removed`: Funcionalidades removidas.
+
+3.4 Workflow de Git e Deploy (OBRIGATÓRIO) 🌳
+
+### Passo 0: Verificação de Segurança
+Antes de qualquer comando git de envio (push), execute uma varredura por credenciais expostas.
+```bash
+grep -r "sb_" .
+grep -r "ey" .
+git status --ignored
+```
+**REGRA**: Se encontrar chaves hardcoded, **PARE**. Revogue a chave, limpe o arquivo e adicione ao `.gitignore`.
+
+### Passo 1: Backup da Versão Atual
+Antes de atualizar a `main` (release), cria-se um snapshot da versão anterior.
+1. `git checkout -b v0.XX` (onde XX é a versão atual/main).
+2. `git push origin v0.XX` (Backup enviado).
+
+### Passo 2: Atualização da Main
+1. Volte para a `main`.
+2. Traga as alterações da nova versão.
+3. `git push origin main`.
+*   Resultado: `v0.XX` (Backup seguro), `main` (Nova versão).
+
+3.5 Documentação de Banco de Dados (Schema) 🗄️
+*   **REGRA**: Toda alteração no banco de dados (DDL) DEVE ser refletida no arquivo `.agent/rules/schema.md`.
+*   **Workflow**:
+    1.  Execute a migração.
+    2.  Atualize `schema.md` com as novas tabelas/colunas.
+
 ## 4. Gerenciamento de Estado
 
 - **Local (useState)**: Apenas para UI efêmera (ex: abrir/fechar modal).

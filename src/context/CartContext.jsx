@@ -5,6 +5,7 @@ import {
     addToCartDB,
     updateQuantityDB,
     removeFromCartDB,
+    clearCartDB,
     getLocalCart,
     saveLocalCart
 } from '../services/cart';
@@ -144,12 +145,27 @@ export const CartProvider = ({ children }) => {
         }
     }, [user]);
 
+    // Clear Cart
+    const clearCart = useCallback(async () => {
+        setCartItems([]);
+        if (user) {
+            try {
+                await clearCartDB(user.id);
+            } catch (e) {
+                console.error("Failed to clear cart in DB", e);
+            }
+        } else {
+            saveLocalCart([]);
+        }
+    }, [user]);
+
     const value = {
         cartItems,
         loading,
         addToCart,
         updateQuantity,
-        removeFromCart
+        removeFromCart,
+        clearCart
     };
 
     return (

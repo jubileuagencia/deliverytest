@@ -90,6 +90,15 @@ export const removeFromCartDB = async (cartItemId) => {
     if (error) throw error;
 };
 
+export const clearCartDB = async (userId) => {
+    const { error } = await supabase
+        .from('cart_items')
+        .delete()
+        .eq('user_id', userId);
+
+    if (error) throw error;
+};
+
 // --- Local Storage Helpers (Guest Cart) ---
 
 const LOCAL_CART_KEY = 'levee_guest_cart';

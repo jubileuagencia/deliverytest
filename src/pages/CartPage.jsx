@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import CartItem from '../components/cart/CartItem';
 import CartSummary from '../components/cart/CartSummary';
 import styles from './CartPage.module.css';
@@ -10,6 +10,7 @@ import { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 
 const CartPage = () => {
+    const navigate = useNavigate();
     const { cartItems, updateQuantity, removeFromCart } = useCart();
     // Totals State
     const [totals, setTotals] = useState({
@@ -59,8 +60,8 @@ const CartPage = () => {
     }, [cartItems]);
 
     const handleCheckout = () => {
-        alert('Proceeding to checkout...');
         // Integrate with payment gateway or order service here
+        navigate('/checkout');
     };
 
     return (

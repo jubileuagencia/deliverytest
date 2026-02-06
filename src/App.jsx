@@ -17,6 +17,9 @@ const ProductPage = React.lazy(() => import('./pages/ProductPage'));
 const SearchPage = React.lazy(() => import('./pages/SearchPage'));
 const CartPage = React.lazy(() => import('./pages/CartPage'));
 const FavoritesPage = React.lazy(() => import('./pages/FavoritesPage'));
+const CheckoutPage = React.lazy(() => import('./pages/CheckoutPage'));
+const OrdersPage = React.lazy(() => import('./pages/OrdersPage'));
+const OrderDetailsPage = React.lazy(() => import('./pages/OrderDetailsPage'));
 const LoginPage = React.lazy(() => import('./pages/LoginPage'));
 const RegisterPage = React.lazy(() => import('./pages/RegisterPage'));
 
@@ -27,7 +30,7 @@ const AppContent = () => {
   const isCartPage = location.pathname === '/carrinho';
 
   // Routes where BottomNavigation should appear
-  const showBottomNav = ['/', '/favoritos'].includes(location.pathname);
+  const showBottomNav = ['/', '/favoritos', '/pedidos'].includes(location.pathname);
 
   // Selected Product for Modal (UI State)
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -65,6 +68,10 @@ const AppContent = () => {
           <Route path="/busca" element={<SearchPage onProductClick={handleProductClick} />} />
           <Route path="/favoritos" element={<FavoritesPage onProductClick={handleProductClick} />} />
           <Route path="/carrinho" element={<CartPage />} />
+          <Route path="/carrinho" element={<CartPage />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/pedidos" element={<OrdersPage />} />
+          <Route path="/pedido/:id" element={<OrderDetailsPage />} />
         </Routes>
       </Suspense>
 
