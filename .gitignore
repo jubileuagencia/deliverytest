@@ -28,9 +28,10 @@ n8n_mcp_config.json
 create_user.js
 verify_supabase.js
 test_n8n.js
+run_migration.cjs
 old_keys.txt
 
-.agent/
+
 .gemini/
 scripts/
 .env
