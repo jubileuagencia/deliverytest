@@ -100,6 +100,8 @@ const RegisterForm = ({ onSuccess }) => {
 
             // 1. Create Auth User with Metadata
             // The DB Trigger 'handle_new_user' will automatically create Profile and Address
+            // 1. Create Auth User with Metadata
+            // The DB Trigger 'handle_new_user' will automatically create Profile and Address
             const { data: { user }, error: authError } = await supabase.auth.signUp({
                 email: formData.email,
                 password: formData.password,

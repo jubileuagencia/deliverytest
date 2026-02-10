@@ -27,6 +27,8 @@ Catálogo de produtos.
 *   `image_url` (text)
 *   `category_id` (uuid, FK -> categories.id)
 *   `stock_quantity` (integer)
+*   `is_active` (boolean, Default: true) - [NEW] Status visibilidade
+*   `display_id` (integer, Auto-Inc) - [NEW] ID Amigável para exibição
 *   `created_at` (timestamp)
 
 ## Tabela: `profiles`
@@ -36,6 +38,7 @@ Dados estendidos do usuário (após Auth).
 *   `cnpj` (text)
 *   `phone` (text)
 *   `tier` (text) - Nível de fidelidade ('bronze', 'silver', 'gold')
+*   `role` (text) - Função do usuário ('customer', 'admin') [NEW]
 *   `created_at` (timestamp)
 
 ## Tabela: `user_addresses`

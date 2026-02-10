@@ -5,6 +5,45 @@ Todos as alterações notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 e este projeto adere ao [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.09] - 2026-02-10
+### 🚀 Added (Admin Products)
+*   **Database Schema**:
+    *   `is_active` (boolean, default true) na tabela `products`.
+    *   `display_id` (int, auto-inc) na tabela `products`.
+    *   Atualização de RLS Policies para permitir gestão de produtos por Admins.
+*   **Admin Architecture**:
+    *   Scaffolding das páginas de Admin (`AdminProducts`, `AdminOrders`, etc).
+    *   Preparação para CRUD de produtos.
+*   **UI Implementation**:
+    *   Tabela de Produtos com design responsivo (Desktop Table / Mobile Cards).
+    *   Integração com `getAdminProducts` para listagem completa.
+
+---
+
+## [v0.08] - 2026-02-07
+### 🚀 Added (Admin & Segurança)
+*   **Controle de Acesso (RBAC)**:
+    *   Implementação de níveis de acesso (`role`) no banco de dados (`profiles`).
+    *   Criação de Rotas Protegidas (`AdminRoute.jsx`) que redirecionam não-admins.
+    *   Painel Administrativo Básico (`AdminDashboard.jsx`).
+*   **Regras de Engenharia (`senior_mindset.md`)**:
+    *   Nova diretriz de "Senior Programmer" focada em Diagnóstico, Idempotência e Visão Sistêmica.
+
+### 🔧 Fixed (Correções Críticas)
+*   **Erro 500 no Cadastro (Registration Flow)**:
+    *   **Diagnóstico**: Identificadas colunas faltantes (`company_name`, `role`, `tier`) na tabela `profiles`.
+    *   **Solução**: Script de reparo estrutural (`repair_full_schema.sql`) e endurecimento do Trigger `handle_new_user`.
+*   **Recursão Infinita (RLS Policy)**:
+    *   Correção do erro `42P17` nas políticas de segurança.
+    *   Implementação da função `is_admin()` com `SECURITY DEFINER` para quebrar o loop de verificação de permissões.
+
+### 🐛 Fixed (Outros)
+*   **AuthContext**:
+    *   Correção de `ReferenceError: profile is not defined`.
+    *   Melhoria na lógica de `getProfile` para evitar estados inconsistentes.
+
+---
+
 ## [v0.08] - 2026-02-06
 ### 🚀 Added (Funcionalidades)
 

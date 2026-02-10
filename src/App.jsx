@@ -9,6 +9,7 @@ import CartNotification from './components/CartNotification';
 import ProductDetailsModal from './components/ProductDetailsModal';
 import BottomNavigation from './components/layout/BottomNavigation';
 import ScrollToTop from './components/ScrollToTop';
+import AdminRoute from './components/AdminRoute';
 
 // Lazy loading pages
 const Home = React.lazy(() => import('./pages/Home'));
@@ -22,6 +23,13 @@ const OrdersPage = React.lazy(() => import('./pages/OrdersPage'));
 const OrderDetailsPage = React.lazy(() => import('./pages/OrderDetailsPage'));
 const LoginPage = React.lazy(() => import('./pages/LoginPage'));
 const RegisterPage = React.lazy(() => import('./pages/RegisterPage'));
+
+// Admin Pages
+const AdminLayout = React.lazy(() => import('./layouts/AdminLayout'));
+const AdminDashboard = React.lazy(() => import('./pages/admin/AdminDashboard'));
+const AdminProducts = React.lazy(() => import('./pages/admin/AdminProducts'));
+const AdminOrders = React.lazy(() => import('./pages/admin/AdminOrders'));
+const AdminClients = React.lazy(() => import('./pages/admin/AdminClients'));
 
 // Wrapper component to access Contexts
 const AppContent = () => {
@@ -43,7 +51,9 @@ const AppContent = () => {
     setSelectedProduct(null);
   };
 
-  const showCartNotification = cartItems.length > 0 && !isCartPage && !location.pathname.startsWith('/produto/') && !selectedProduct && location.pathname !== '/cadastro' && location.pathname !== '/login';
+  const isAdminPage = location.pathname.startsWith('/admin');
+
+  const showCartNotification = cartItems.length > 0 && !isCartPage && !location.pathname.startsWith('/produto/') && !selectedProduct && location.pathname !== '/cadastro' && location.pathname !== '/login' && !isAdminPage;
 
   let paddingBottom = '0';
   if (showBottomNav && showCartNotification) {
@@ -55,8 +65,8 @@ const AppContent = () => {
   }
 
   return (
-    <div className="App" style={{ paddingTop: '80px', paddingBottom }}>
-      <Header />
+    <div className="App" style={{ paddingTop: isAdminPage ? '0' : '80px', paddingBottom }}>
+      {!isAdminPage && <Header />}
 
       <Suspense fallback={<div style={{ display: 'flex', justifyContent: 'center', padding: '50px' }}>Carregando...</div>}>
         <Routes>
@@ -72,6 +82,16 @@ const AppContent = () => {
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/pedidos" element={<OrdersPage />} />
           <Route path="/pedido/:id" element={<OrderDetailsPage />} />
+
+          {/* Admin Routes */}
+          <Route path="/admin" element={<AdminRoute />}>
+            <Route element={<AdminLayout />}>
+              <Route index element={<AdminDashboard />} />
+              <Route path="produtos" element={<AdminProducts />} />
+              <Route path="pedidos" element={<AdminOrders />} />
+              <Route path="clientes" element={<AdminClients />} />
+            </Route>
+          </Route>
         </Routes>
       </Suspense>
 

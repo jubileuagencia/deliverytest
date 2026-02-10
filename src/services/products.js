@@ -4,6 +4,7 @@ export const getProducts = async (limit = null) => {
     let query = supabase
         .from('products')
         .select('*')
+        .eq('is_active', true) // PUBLIC: Only active products
         .order('id', { ascending: true });
 
     if (limit) {
@@ -14,12 +15,28 @@ export const getProducts = async (limit = null) => {
 
     if (error) {
         console.error('Error fetching products:', error);
-        // Return empty array or throw based on preference. 
-        // For now returning empty array to avoid app crash.
         return [];
     }
 
     return data;
+};
+
+export const getAdminProducts = async (page = 0, limit = 50) => {
+    const start = page * limit;
+    const end = start + limit - 1;
+
+    const { data, error, count } = await supabase
+        .from('products')
+        .select('*, categories(name)', { count: 'exact' })
+        .order('display_id', { ascending: true }) // ADMIN: Order by Friendly ID
+        .range(start, end);
+
+    if (error) {
+        console.error('Error fetching admin products:', error);
+        return { data: [], count: 0 };
+    }
+
+    return { data, count };
 };
 
 

@@ -7,19 +7,38 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         // Check active session
-        supabase.auth.getSession().then(({ data: { session } }) => {
+        const getProfile = async (session) => {
+            if (session?.user) {
+                const { data, error } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', session.user.id)
+                    .single();
+
+                if (!error && data) {
+                    setProfile(data);
+                } else {
+                    setProfile(null);
+                }
+            } else {
+                setProfile(null);
+            }
             setUser(session?.user ?? null);
             setLoading(false);
+        };
+
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            getProfile(session);
         });
 
         // Listen for changes
         const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-            setUser(session?.user ?? null);
-            setLoading(false);
+            getProfile(session);
         });
 
         return () => subscription.unsubscribe();
@@ -40,10 +59,12 @@ export const AuthProvider = ({ children }) => {
     const logout = async () => {
         const { error } = await supabase.auth.signOut();
         if (error) throw error;
+        setProfile(null);
+        setUser(null);
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, signup, logout, loading }}>
+        <AuthContext.Provider value={{ user, profile, login, signup, logout, loading }}>
             {!loading && children}
         </AuthContext.Provider>
     );
