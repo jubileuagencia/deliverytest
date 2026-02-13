@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import styles from './AuthForm.module.css'; // Reusing AuthForm styles for consistency
 import { isValidCNPJ } from '../../utils/validators';
 import { formatCNPJ, formatPhone, formatCEP, cleanDigits } from '../../utils/masks';
-import { supabase } from '../../lib/supabase';
+import { registerUser } from '../../services/auth';
 
 const RegisterForm = ({ onSuccess }) => {
     const [step, setStep] = useState(1); // 1: Basic Info, 2: Address
@@ -102,15 +102,12 @@ const RegisterForm = ({ onSuccess }) => {
             // The DB Trigger 'handle_new_user' will automatically create Profile and Address
             // 1. Create Auth User with Metadata
             // The DB Trigger 'handle_new_user' will automatically create Profile and Address
-            const { data: { user }, error: authError } = await supabase.auth.signUp({
+            const user = await registerUser({
                 email: formData.email,
                 password: formData.password,
-                options: {
-                    data: metadata
-                }
+                metadata
             });
 
-            if (authError) throw authError;
             if (!user) throw new Error("Erro ao criar usuário.");
 
             if (onSuccess) onSuccess();

@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import { useConfig } from '../context/ConfigContext';
 import { createOrder } from '../services/orders';
-import { getAppConfig } from '../services/config';
-import { supabase } from '../lib/supabase';
 
 import CheckoutWizard from '../components/checkout/CheckoutWizard';
 import StepAddress from '../components/checkout/StepAddress';
@@ -16,8 +15,9 @@ import styles from './CheckoutPage.module.css';
 
 const CheckoutPage = () => {
     const navigate = useNavigate();
-    const { user } = useAuth();
+    const { user, profile } = useAuth();
     const { cartItems, loading: cartLoading, removeFromCart, clearCart } = useCart();
+    const { config } = useConfig();
 
     // Wizard State
     const [currentStep, setCurrentStep] = useState(1);
@@ -42,29 +42,24 @@ const CheckoutPage = () => {
 
     // Calculate Totals Effect
     useEffect(() => {
-        const calc = async () => {
-            const baseSubtotal = cartItems.reduce((sum, item) => sum + (Number(item.price) * item.quantity), 0);
+        if (cartItems.length === 0) return;
 
-            // Fetch Tier
-            let tier = 'bronze';
-            if (user) {
-                const { data } = await supabase.from('profiles').select('tier').eq('id', user.id).single();
-                if (data) tier = data.tier;
-            }
+        const baseSubtotal = cartItems.reduce((sum, item) => sum + (Number(item.price) * item.quantity), 0);
 
-            const config = await getAppConfig('tier_discounts');
-            const discountPercent = (config && config[tier]) || 0;
-            const discountAmount = baseSubtotal * discountPercent;
+        // Read tier from AuthContext (already loaded)
+        const tier = profile?.tier || 'bronze';
 
-            setTotals({
-                subtotal: baseSubtotal,
-                discount: discountAmount,
-                total: baseSubtotal - discountAmount,
-                tier
-            });
-        };
-        if (cartItems.length > 0) calc();
-    }, [cartItems, user]);
+        const discounts = config.tier_discounts || {};
+        const discountPercent = discounts[tier] || 0;
+        const discountAmount = baseSubtotal * discountPercent;
+
+        setTotals({
+            subtotal: baseSubtotal,
+            discount: discountAmount,
+            total: baseSubtotal - discountAmount,
+            tier
+        });
+    }, [cartItems, profile?.tier, config.tier_discounts]);
 
     const nextStep = () => setCurrentStep(prev => prev + 1);
     const prevStep = () => setCurrentStep(prev => prev - 1);

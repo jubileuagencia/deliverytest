@@ -3,7 +3,7 @@
     /* bottom is set dynamically via inline style */
     left: 20px;
     right: 20px;
-    background-color: #FFFFFF;
+    background-color: var(--surface-color);
     border-radius: 12px;
     padding: 12px 20px;
     display: flex;
@@ -12,7 +12,7 @@
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     z-index: 2000;
     animation: slideUp 0.3s ease-out;
-    border: 1px solid #F3F4F6;
+    border: 1px solid var(--bg-secondary);
     transition: bottom 0.3s ease;
     /* Smooth transition if nav appears/disappears */
 }
@@ -24,7 +24,7 @@
 
 .label {
     font-size: 0.85rem;
-    color: #9CA3AF;
+    color: var(--text-muted);
     margin-bottom: 2px;
 }
 
@@ -36,14 +36,14 @@
 .price {
     font-size: 1rem;
     font-weight: 700;
-    color: #1F2937;
+    color: var(--text-primary);
     /* Dark gray/black */
     margin-right: 4px;
 }
 
 .count {
     font-size: 0.85rem;
-    color: #9CA3AF;
+    color: var(--text-muted);
 }
 
 .button {

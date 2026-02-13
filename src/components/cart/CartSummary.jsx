@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from './CartSummary.module.css';
 
 const CartSummary = ({ totals, onCheckout }) => {
     const deliveryFee = 5.00; // Fixed for now
@@ -11,90 +12,41 @@ const CartSummary = ({ totals, onCheckout }) => {
 
     return (
         <div className="cart-summary">
-            <h3 style={styles.title}>Resumo do Pedido</h3>
+            <h3 className={styles.title}>Resumo do Pedido</h3>
 
-            <div style={styles.row}>
-                <span style={styles.label}>Subtotal</span>
-                <span style={styles.value}>R$ {subtotal.toFixed(2).replace('.', ',')}</span>
+            <div className={styles.row}>
+                <span className={styles.label}>Subtotal</span>
+                <span className={styles.value}>R$ {subtotal.toFixed(2).replace('.', ',')}</span>
             </div>
 
             {discount > 0 && (
-                <div style={styles.row}>
-                    <span style={{ ...styles.label, color: 'var(--primary-color)' }}>
+                <div className={styles.row}>
+                    <span className={styles.labelDiscount}>
                         Desconto ({totals.tier === 'silver' ? 'Prata' : 'Ouro'})
                     </span>
-                    <span style={{ ...styles.value, color: 'var(--primary-color)' }}>
+                    <span className={styles.valueDiscount}>
                         - R$ {discount.toFixed(2).replace('.', ',')}
                     </span>
                 </div>
             )}
 
-            <div style={styles.row}>
-                <span style={styles.label}>Taxa de Entrega</span>
-                <span style={styles.value}>R$ {deliveryFee.toFixed(2).replace('.', ',')}</span>
+            <div className={styles.row}>
+                <span className={styles.label}>Taxa de Entrega</span>
+                <span className={styles.value}>R$ {deliveryFee.toFixed(2).replace('.', ',')}</span>
             </div>
 
-            <div style={styles.divider} />
+            <div className={styles.divider} />
 
-            <div style={styles.row}>
-                <span style={styles.totalLabel}>Total</span>
-                <span style={styles.totalValue}>R$ {finalTotal.toFixed(2).replace('.', ',')}</span>
+            <div className={styles.row}>
+                <span className={styles.totalLabel}>Total</span>
+                <span className={styles.totalValue}>R$ {finalTotal.toFixed(2).replace('.', ',')}</span>
             </div>
 
-            <button style={styles.checkoutBtn} onClick={onCheckout}>
+            <button className={styles.checkoutBtn} onClick={onCheckout}>
                 Finalizar Pedido
             </button>
         </div>
     );
-};
-
-const styles = {
-    title: {
-        fontSize: '1.25rem',
-        fontWeight: '700',
-        marginBottom: '20px',
-        color: '#111827',
-    },
-    row: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        marginBottom: '12px',
-    },
-    label: {
-        color: '#6B7280', // Gray-500
-        fontSize: '0.95rem',
-    },
-    value: {
-        fontWeight: '600',
-        color: '#374151',
-    },
-    divider: {
-        height: '1px',
-        backgroundColor: '#E5E7EB',
-        margin: '16px 0',
-    },
-    totalLabel: {
-        fontSize: '1.1rem',
-        fontWeight: '700',
-        color: '#111827',
-    },
-    totalValue: {
-        fontSize: '1.25rem',
-        fontWeight: '800',
-        color: 'var(--primary-color)', // Primary Green
-    },
-    checkoutBtn: {
-        width: '100%',
-        backgroundColor: '#111827', // Black
-        color: '#fff',
-        padding: '14px',
-        borderRadius: '12px',
-        fontWeight: '600',
-        fontSize: '1rem',
-        marginTop: '24px',
-        cursor: 'pointer',
-        transition: 'opacity 0.2s',
-    },
 };
 
 export default CartSummary;

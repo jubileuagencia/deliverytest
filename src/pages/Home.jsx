@@ -4,7 +4,6 @@ import { getCategories } from '../services/products';
 import HomeSearchBar from '../components/home/HomeSearchBar';
 import PromoBanner from '../components/home/PromoBanner';
 import CategorySection from '../components/home/CategorySection';
-import BottomNavigation from '../components/layout/BottomNavigation';
 import styles from './Home.module.css';
 import { useCart } from '../context/CartContext';
 
@@ -32,8 +31,6 @@ const Home = ({ onProductClick }) => {
                 <span className={styles.seeAll}>Ver todas</span>
             </div>
             <FeaturedProducts onAddToCart={addToCart} onProductClick={onProductClick} />
-
-            <BottomNavigation />
         </main>
     );
 };

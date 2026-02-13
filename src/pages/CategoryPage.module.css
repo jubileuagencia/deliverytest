@@ -11,5 +11,5 @@
 }
 
 .empty {
-    color: #6B7280;
+    color: var(--text-secondary);
 }

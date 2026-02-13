@@ -3,7 +3,7 @@
     bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
-    background-color: #1F2937;
+    background-color: var(--text-primary);
     /* Gray-900 Solid */
     color: #fff;
     padding: 12px 24px;

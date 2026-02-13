@@ -1,7 +1,7 @@
 .page {
     padding-top: 0px;
     min-height: 100vh;
-    background-color: #FCFCFD;
+    background-color: var(--bg-color);
 }
 
 .header {
@@ -12,12 +12,12 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    border-bottom: 1px solid #E5E7EB;
+    border-bottom: 1px solid var(--border-color);
     z-index: 100;
 }
 
 .backButton {
-    color: #374151;
+    color: var(--text-secondary);
     display: flex;
     align-items: center;
 }
@@ -26,7 +26,7 @@
     flex: 1;
     display: flex;
     align-items: center;
-    background-color: #F3F4F6;
+    background-color: var(--bg-secondary);
     border-radius: 12px;
     padding: 8px 12px;
     position: relative;
@@ -38,7 +38,7 @@
     background: transparent;
     font-size: 1rem;
     outline: none;
-    color: #1F2937;
+    color: var(--text-primary);
 }
 
 .spinnerWrapper {
@@ -50,7 +50,7 @@
 .spinner {
     width: 16px;
     height: 16px;
-    border: 2px solid #E5E7EB;
+    border: 2px solid var(--border-color);
     border-top: 2px solid var(--primary-color);
     border-radius: 50%;
     animation: spin 1s linear infinite;
@@ -63,13 +63,13 @@
 .loading {
     text-align: center;
     padding: 40px;
-    color: #6B7280;
+    color: var(--text-secondary);
 }
 
 .resultsTitle {
     font-size: 1rem;
     font-weight: 600;
-    color: #1F2937;
+    color: var(--text-primary);
     margin-bottom: 16px;
 }
 
@@ -79,7 +79,7 @@
     align-items: center;
     justify-content: center;
     padding: 60px 20px;
-    color: #374151;
+    color: var(--text-secondary);
     text-align: center;
 }
 
@@ -90,7 +90,7 @@
 
 .emptyText {
     font-size: 0.9rem;
-    color: #6B7280;
+    color: var(--text-secondary);
 }
 
 @keyframes spin {

@@ -11,7 +11,7 @@
 }
 
 .option {
-    border: 2px solid #E5E7EB;
+    border: 2px solid var(--border-color);
     border-radius: 12px;
     padding: 20px;
     cursor: pointer;
@@ -35,12 +35,12 @@
 .name {
     display: block;
     font-weight: 600;
-    color: #111827;
+    color: var(--text-primary);
 }
 
 .desc {
     font-size: 0.8rem;
-    color: #6B7280;
+    color: var(--text-secondary);
 }
 
 .nextButton {

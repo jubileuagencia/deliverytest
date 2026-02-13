@@ -78,7 +78,6 @@ const AppContent = () => {
           <Route path="/busca" element={<SearchPage onProductClick={handleProductClick} />} />
           <Route path="/favoritos" element={<FavoritesPage onProductClick={handleProductClick} />} />
           <Route path="/carrinho" element={<CartPage />} />
-          <Route path="/carrinho" element={<CartPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/pedidos" element={<OrdersPage />} />
           <Route path="/pedido/:id" element={<OrderDetailsPage />} />

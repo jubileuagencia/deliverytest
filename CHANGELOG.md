@@ -5,6 +5,46 @@ Todos as alterações notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 e este projeto adere ao [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.10] - 2026-02-13
+### 🚀 Added (Novidades)
+
+#### 🔒 Segurança do Servidor (Phase 9)
+*   **Endereço Principal Atômico**: Criada função no banco de dados (`set_main_address`) que garante que só existe 1 endereço "principal" por usuário. Antes, se houvesse uma falha no meio da troca, o sistema poderia ficar com 0 ou 2 endereços marcados como principal.
+*   **Validação de Preço no Servidor**: Criada função no banco (`create_order_validated`) que recalcula o preço dos produtos no momento da compra, usando os preços reais do catálogo. Isso impede que alguém manipule preços pelo navegador.
+*   **Proteção de Produtos (RLS)**: Agora apenas administradores podem criar, editar ou excluir produtos. Clientes comuns só conseguem visualizar.
+*   **Arquivo SQL de migração**: `supabase/migrations/009_security_hardening.sql` com todo o SQL necessário.
+
+#### 📄 Documentação
+*   **Schema atualizado** (`.agent/rules/schema.md` → v0.09): Adicionadas as tabelas `cart_items` (carrinho) e `favorites` (favoritos) que estavam faltando na documentação.
+
+### 🔧 Changed (Melhorias de Código)
+
+#### 🎨 CSS Modules — Estilos Organizados (Phase 7)
+*   **O que mudou**: Antes, muitos componentes usavam estilos escritos direto no código JavaScript (ex: `style={{ color: 'red' }}`). Agora, todos os estilos ficam em arquivos `.module.css` separados, que é a forma recomendada pelo React.
+*   **Por que importa**: Facilita manutenção. Se precisar mudar uma cor, basta ir no arquivo CSS ao invés de procurar no meio do JavaScript.
+*   **Componentes migrados**:
+    *   `CartItem` e `CartSummary` — Itens e resumo do carrinho
+    *   `FavoritesPage` — Página de favoritos
+    *   `AdminProducts`, `AdminDashboard`, `AdminRoute` — Páginas do admin
+    *   `AdminProductTable` — Tabela de produtos (limpeza de estilos restantes)
+    *   `PromoBanner`, `CategorySection` — Componentes da home
+    *   `Header` — Cabeçalho do site
+
+#### 🎨 Cores Padronizadas (Phase 7h — Hex Sweep)
+*   **O que mudou**: Antes, as cores estavam escritas como códigos hexadecimais repetidos em dezenas de arquivos (ex: `#111827`, `#6B7280`). Agora, todas usam variáveis CSS centralizadas (ex: `var(--text-primary)`).
+*   **Novas variáveis criadas** no `index.css`:
+    *   `--text-muted` — Texto cinza claro (informações secundárias)
+    *   `--border-color` — Cor das bordas
+    *   `--bg-secondary` — Fundo cinza de cards e áreas
+    *   `--danger-color` — Vermelho para erros e exclusões
+*   **~120+ substituições** em todos os arquivos de estilo.
+
+#### ⚡ Services Atualizados (Phase 9)
+*   `address.js` — Agora usa a função segura do banco para trocar endereço principal. Se a função não existir ainda, funciona do jeito antigo (fallback automático).
+*   `orders.js` — Agora tenta validar preços no servidor antes de criar o pedido. Se a função não existir, funciona do jeito antigo.
+
+---
+
 ## [v0.09] - 2026-02-10
 ### 🚀 Added (Admin Products)
 *   **Database Schema**:

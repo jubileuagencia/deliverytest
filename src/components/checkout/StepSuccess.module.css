@@ -12,14 +12,14 @@
 }
 
 .message {
-    color: #6B7280;
+    color: var(--text-secondary);
 }
 
 .paymentBox {
-    background-color: #F9FAFB;
+    background-color: var(--bg-color);
     padding: 20px;
     border-radius: 12px;
-    border: 1px dashed #D1D5DB;
+    border: 1px dashed var(--border-color);
     width: 100%;
     max-width: 400px;
     display: flex;
@@ -39,7 +39,7 @@
 
 .instruction {
     font-size: 0.85rem;
-    color: #6B7280;
+    color: var(--text-secondary);
 }
 
 .barcode {

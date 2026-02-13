@@ -5,7 +5,7 @@
     width: 100%;
     height: 80px;
     /* Taller for 2-line location */
-    background-color: #FFFFFF;
+    background-color: var(--surface-color);
     /* White bg */
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     z-index: 1000;
@@ -29,7 +29,7 @@
 
 .locationLabel {
     font-size: 0.75rem;
-    color: #9CA3AF;
+    color: var(--text-muted);
     /* Gray-400 */
     margin-bottom: 2px;
 }
@@ -37,7 +37,7 @@
 .locationValue {
     font-size: 0.95rem;
     font-weight: 700;
-    color: #1F2937;
+    color: var(--text-primary);
     /* Gray-800 */
     display: flex;
     align-items: center;
@@ -58,10 +58,10 @@
 
 .iconButton {
     composes: iconButtonBase;
-    background: #F3F4F6;
+    background: var(--bg-secondary);
     /* Light gray circle */
     border: none;
-    color: #1F2937;
+    color: var(--text-primary);
 }
 
 .cartButton {
@@ -78,7 +78,7 @@
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background-color: #EF4444;
+    background-color: var(--danger-color);
     border: 1px solid #FFF;
 }
 
@@ -86,7 +86,7 @@
     position: absolute;
     top: -5px;
     right: -5px;
-    background-color: #EF4444;
+    background-color: var(--danger-color);
     color: #fff;
     font-size: 0.7rem;
     font-weight: bold;
@@ -104,6 +104,22 @@
     font-size: 0.8rem;
     font-weight: 600;
     color: var(--primary-color);
+    width: auto;
+    padding: 0 16px;
+}
+
+.userSection {
+    cursor: pointer;
+}
+
+.userBadge {
+    composes: iconButton;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    width: auto;
+    padding: 0 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
 }
 
 .logoutButton {

@@ -1,99 +1,108 @@
 import { supabase } from '../lib/supabase';
 
 export const getProducts = async (limit = null) => {
-    let query = supabase
-        .from('products')
-        .select('*')
-        .eq('is_active', true) // PUBLIC: Only active products
-        .order('id', { ascending: true });
+    try {
+        let query = supabase
+            .from('products')
+            .select('*')
+            .eq('is_active', true)
+            .order('id', { ascending: true });
 
-    if (limit) {
-        query = query.limit(limit);
-    }
+        if (limit) {
+            query = query.limit(limit);
+        }
 
-    const { data, error } = await query;
+        const { data, error } = await query;
 
-    if (error) {
+        if (error) throw error;
+        return data;
+    } catch (error) {
         console.error('Error fetching products:', error);
-        return [];
+        throw error;
     }
-
-    return data;
 };
 
 export const getAdminProducts = async (page = 0, limit = 50) => {
-    const start = page * limit;
-    const end = start + limit - 1;
+    try {
+        const start = page * limit;
+        const end = start + limit - 1;
 
-    const { data, error, count } = await supabase
-        .from('products')
-        .select('*, categories(name)', { count: 'exact' })
-        .order('display_id', { ascending: true }) // ADMIN: Order by Friendly ID
-        .range(start, end);
+        const { data, error, count } = await supabase
+            .from('products')
+            .select('*, categories(name)', { count: 'exact' })
+            .order('display_id', { ascending: true })
+            .range(start, end);
 
-    if (error) {
+        if (error) throw error;
+        return { data, count };
+    } catch (error) {
         console.error('Error fetching admin products:', error);
-        return { data: [], count: 0 };
+        throw error;
     }
-
-    return { data, count };
 };
 
 
 export const getCategories = async () => {
-    const { data, error } = await supabase
-        .from('categories')
-        .select('id, name, icon, color')
-        .order('name');
+    try {
+        const { data, error } = await supabase
+            .from('categories')
+            .select('id, name, icon, color')
+            .order('name');
 
-    if (error) {
+        if (error) throw error;
+        return data;
+    } catch (error) {
         console.error('Error fetching categories:', error);
-        return [];
+        throw error;
     }
-    return data;
 };
 
 export const getProductsByCategory = async (categoryName, page = 0, limit = 12) => {
-    const start = page * limit;
-    const end = start + limit - 1;
+    try {
+        const start = page * limit;
+        const end = start + limit - 1;
 
-    // Join with categories table and filter by category name
-    const { data, error } = await supabase
-        .from('products')
-        .select('*, categories!inner(name)')
-        .ilike('categories.name', categoryName)
-        .range(start, end);
+        const { data, error } = await supabase
+            .from('products')
+            .select('*, categories!inner(name)')
+            .ilike('categories.name', categoryName)
+            .range(start, end);
 
-    if (error) {
+        if (error) throw error;
+        return data;
+    } catch (error) {
         console.error(`Error fetching products for category ${categoryName}:`, error);
-        return [];
+        throw error;
     }
-    return data;
 };
 
 export const getProductById = async (id) => {
-    const { data, error } = await supabase
-        .from('products')
-        .select('*, categories(name)')
-        .eq('id', id)
-        .single();
+    try {
+        const { data, error } = await supabase
+            .from('products')
+            .select('*, categories(name)')
+            .eq('id', id)
+            .single();
 
-    if (error) {
+        if (error) throw error;
+        return data;
+    } catch (error) {
         console.error(`Error fetching product ${id}:`, error);
-        return null;
+        throw error;
     }
-    return data;
 };
 
 export const searchProducts = async (query) => {
     if (!query) return [];
 
-    const { data, error } = await supabase
-        .rpc('search_products_v2', { query_term: query });
+    try {
+        const { data, error } = await supabase
+            .rpc('search_products_v2', { query_term: query });
 
-    if (error) {
+        if (error) throw error;
+        return data;
+    } catch (error) {
         console.error('Error searching products:', error);
-        return [];
+        throw error;
     }
-    return data;
 };

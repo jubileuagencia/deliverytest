@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import RegisterForm from '../components/auth/RegisterForm';
-import styles from './LoginPage.module.css'; // Reusing Login Page layout styles
+import styles from './RegisterPage.module.css';
 
 const RegisterPage = () => {
     const navigate = useNavigate();
@@ -21,16 +21,16 @@ const RegisterPage = () => {
     };
 
     return (
-        <div className={`container ${styles.page}`} style={{ flexDirection: 'column' }}>
+        <div className={`container ${styles.page}`}>
             <RegisterForm onSuccess={handleSuccess} />
 
-            <div style={{ textAlign: 'center', marginTop: '20px' }}>
-                <span style={{ color: 'var(--text-secondary)' }}>
+            <div className={styles.footer}>
+                <span className={styles.footerText}>
                     Já tem uma conta?{' '}
                 </span>
                 <button
                     onClick={() => navigate('/login')}
-                    style={{ background: 'none', border: 'none', color: 'var(--primary-color)', fontWeight: 'bold', cursor: 'pointer', textDecoration: 'underline' }}
+                    className={styles.loginButton}
                 >
                     Entrar
                 </button>

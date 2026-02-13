@@ -33,31 +33,13 @@ export const ConfigProvider = ({ children }) => {
         // 1. Initial Fetch
         loadConfig();
 
-        // 2. Realtime Subscription (Best Effort)
+        // 2. Realtime Subscription (updates pushed from Supabase when config changes)
         const subscription = subscribeToConfigChanges('tier_discounts', (newDiscounts) => {
-
             setConfig(prev => ({ ...prev, tier_discounts: newDiscounts }));
         });
 
-        // 3. Polling (Safety Net - Every 60s)
-        const intervalId = setInterval(() => {
-            loadConfig();
-        }, 60000);
-
-        // 4. Focus Refetch (UX - Update when user returns to app)
-        const handleFocus = () => {
-            if (document.visibilityState === 'visible') {
-                loadConfig();
-            }
-        };
-        window.addEventListener('visibilitychange', handleFocus);
-        window.addEventListener('focus', loadConfig);
-
         return () => {
             subscription.unsubscribe();
-            clearInterval(intervalId);
-            window.removeEventListener('visibilitychange', handleFocus);
-            window.removeEventListener('focus', loadConfig);
         };
     }, [loadConfig]);
 

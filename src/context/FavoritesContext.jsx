@@ -53,31 +53,52 @@ export const FavoritesProvider = ({ children }) => {
         return favorites.some(fav => fav.id === productId);
     };
 
-    const toggleFavorite = async (productId) => {
+    const toggleFavorite = async (productId, product = null) => {
         if (!user) return false;
 
         const isFav = isFavorite(productId);
 
-        try {
-            if (isFav) {
+        if (isFav) {
+            // Optimistic remove
+            const previousFavorites = [...favorites];
+            setFavorites(prev => prev.filter(fav => fav.id !== productId));
+
+            try {
                 await removeFavorite(user.id, productId);
-                setFavorites(prev => prev.filter(fav => fav.id !== productId));
-            } else {
-                await addFavorite(user.id, productId);
-                // Optimistic update or refetch? 
-                // We need product details to add to state if we want to display it immediately.
-                // For now, let's just add a placeholder or fetch it.
-                // Or simplified: Just trigger a reload or add if we have the product object.
-                // Since this is called from ProductPage, we might have the product object? 
-                // The signature is just (productId).
-                // Let's reload for correctness or accept inconsistency until reload.
-                // Better: loadFavorites();
-                loadFavorites();
+                return true;
+            } catch (error) {
+                console.error('Error removing favorite:', error);
+                setFavorites(previousFavorites); // Rollback
+                return false;
             }
-            return true;
-        } catch (error) {
-            console.error('Error toggling favorite:', error);
-            return false;
+        } else {
+            // Optimistic add
+            if (product) {
+                const optimisticItem = {
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    image_url: product.image_url,
+                    description: product.description || ''
+                };
+                setFavorites(prev => [...prev, optimisticItem]);
+            }
+
+            try {
+                await addFavorite(user.id, productId);
+                // If we didn't have the product object, fetch to sync
+                if (!product) {
+                    await loadFavorites();
+                }
+                return true;
+            } catch (error) {
+                console.error('Error adding favorite:', error);
+                // Rollback optimistic add
+                if (product) {
+                    setFavorites(prev => prev.filter(fav => fav.id !== productId));
+                }
+                return false;
+            }
         }
     };
 

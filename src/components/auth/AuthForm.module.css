@@ -6,7 +6,7 @@
     border-radius: 12px;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     /* Shadow LG */
-    border: 1px solid #E5E7EB;
+    border: 1px solid var(--border-color);
     /* Gray-200 */
     margin: 0 auto;
 }
@@ -14,7 +14,7 @@
 .title {
     text-align: center;
     margin-bottom: 1.5rem;
-    color: var(--text-primary, #111827);
+    color: var(--text-primary, var(--text-primary));
     font-size: 1.5rem;
     font-weight: 700;
 }
@@ -44,15 +44,15 @@
 .label {
     font-size: 0.875rem;
     font-weight: 500;
-    color: var(--text-secondary, #374151);
+    color: var(--text-secondary, var(--text-secondary));
 }
 
 .input {
     padding: 0.75rem;
-    border: 1px solid #E5E7EB;
+    border: 1px solid var(--border-color);
     border-radius: 8px;
-    background-color: #F9FAFB;
-    color: var(--text-primary, #111827);
+    background-color: var(--bg-color);
+    color: var(--text-primary, var(--text-primary));
     font-size: 1rem;
     transition: all 0.2s;
     outline: none;
@@ -97,7 +97,7 @@
 }
 
 .switchText {
-    color: var(--text-secondary, #6B7280);
+    color: var(--text-secondary, var(--text-secondary));
     font-size: 0.875rem;
 }
 

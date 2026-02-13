@@ -1,13 +1,13 @@
 .adminContainer {
     display: flex;
     min-height: 100vh;
-    background-color: var(--bg-color, #f3f4f6);
+    background-color: var(--bg-color, var(--bg-secondary));
 }
 
 .sidebar {
     width: 250px;
-    background-color: #ffffff;
-    border-right: 1px solid #e5e7eb;
+    background-color: var(--surface-color);
+    border-right: 1px solid var(--border-color);
     display: flex;
     flex-direction: column;
     padding: 20px;
@@ -29,7 +29,7 @@
 
 .userEmail {
     font-size: 0.875rem;
-    color: #6b7280;
+    color: var(--text-secondary);
     word-break: break-all;
 }
 
@@ -44,14 +44,14 @@
     display: block;
     padding: 10px 15px;
     border-radius: 8px;
-    color: #374151;
+    color: var(--text-secondary);
     text-decoration: none;
     transition: all 0.2s;
     font-weight: 500;
 }
 
 .navItem:hover {
-    background-color: #f3f4f6;
+    background-color: var(--bg-secondary);
     color: var(--primary-color, #10b981);
 }
 
@@ -62,7 +62,7 @@
 }
 
 .sidebarFooter {
-    border-top: 1px solid #e5e7eb;
+    border-top: 1px solid var(--border-color);
     padding-top: 20px;
     margin-top: 20px;
     display: flex;
@@ -72,8 +72,8 @@
 
 .logoutBtn {
     background: none;
-    border: 1px solid #ef4444;
-    color: #ef4444;
+    border: 1px solid var(--danger-color);
+    color: var(--danger-color);
     padding: 8px;
     border-radius: 6px;
     cursor: pointer;
@@ -87,7 +87,7 @@
 .backLink {
     text-align: center;
     font-size: 0.875rem;
-    color: #6b7280;
+    color: var(--text-secondary);
     text-decoration: none;
 }
 
@@ -106,7 +106,7 @@
     justify-content: space-between;
     padding: 15px 20px;
     background-color: white;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--border-color);
     position: fixed;
     top: 0;
     left: 0;
@@ -135,7 +135,7 @@
     display: block;
     width: 25px;
     height: 3px;
-    background-color: #374151;
+    background-color: var(--text-secondary);
     border-radius: 3px;
     transition: all 0.3s ease;
 }

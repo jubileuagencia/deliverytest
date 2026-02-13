@@ -8,7 +8,7 @@
 .title {
     margin-bottom: 24px;
     font-size: 1.5rem;
-    color: #111827;
+    color: var(--text-primary);
 }
 
 .list {
@@ -25,13 +25,13 @@
 
 .date {
     font-size: 0.85rem;
-    color: #6B7280;
+    color: var(--text-secondary);
     font-weight: 500;
     margin-left: 4px;
 }
 
 .empty {
     text-align: center;
-    color: #9CA3AF;
+    color: var(--text-muted);
     margin-top: 50px;
 }

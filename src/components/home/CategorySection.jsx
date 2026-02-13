@@ -13,7 +13,7 @@ const CategoryItem = ({ icon, name, color }) => (
 
 const CategorySection = ({ categories }) => {
     return (
-        <div style={{ marginBottom: '30px' }}>
+        <div className={styles.wrapper}>
             <div className={styles.header}>
                 <h3 className={styles.sectionTitle}>Categorias</h3>
                 <span className={styles.seeAll}>Ver todas</span>

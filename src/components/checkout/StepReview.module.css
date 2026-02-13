@@ -5,18 +5,18 @@
 }
 
 .section {
-    border-bottom: 1px solid #E5E7EB;
+    border-bottom: 1px solid var(--border-color);
     padding-bottom: 16px;
 }
 
 .section h4 {
     font-size: 0.95rem;
-    color: #374151;
+    color: var(--text-secondary);
     margin-bottom: 8px;
 }
 
 .text {
-    color: #6B7280;
+    color: var(--text-secondary);
     font-size: 0.9rem;
     line-height: 1.5;
 }
@@ -31,11 +31,11 @@
     display: flex;
     justify-content: space-between;
     font-size: 0.9rem;
-    color: #4B5563;
+    color: var(--text-secondary);
 }
 
 .summary {
-    background-color: #F9FAFB;
+    background-color: var(--bg-color);
     padding: 16px;
     border-radius: 12px;
     display: flex;
@@ -47,7 +47,7 @@
     display: flex;
     justify-content: space-between;
     font-size: 0.9rem;
-    color: #4B5563;
+    color: var(--text-secondary);
 }
 
 .discount {
@@ -57,10 +57,10 @@
 .total {
     font-weight: 700;
     font-size: 1.1rem;
-    color: #111827;
+    color: var(--text-primary);
     margin-top: 8px;
     padding-top: 8px;
-    border-top: 1px dashed #D1D5DB;
+    border-top: 1px dashed var(--border-color);
 }
 
 .submitButton {
@@ -76,6 +76,6 @@
 }
 
 .submitButton:disabled {
-    background-color: #9CA3AF;
+    background-color: var(--text-muted);
     cursor: not-allowed;
 }

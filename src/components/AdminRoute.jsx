@@ -1,12 +1,13 @@
 import React from 'react';
 import { Navigate, Outlet, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import styles from './AdminRoute.module.css';
 
 const AdminRoute = () => {
-    const { user, profile, loading } = useAuth(); // Assuming 'profile' will be added to AuthContext
+    const { user, profile, loading } = useAuth();
 
     if (loading) {
-        return <div style={{ display: 'flex', justifyContent: 'center', padding: '50px' }}>Carregando...</div>;
+        return <div className={styles.loading}>Carregando...</div>;
     }
 
     if (!user) {
@@ -15,10 +16,10 @@ const AdminRoute = () => {
 
     if (profile?.role !== 'admin') {
         return (
-            <div style={{ padding: '50px', textAlign: 'center', color: '#ef4444' }}>
+            <div className={styles.denied}>
                 <h1>Você não é admin</h1>
                 <p>Esta área é restrita para administradores.</p>
-                <Link to="/" style={{ color: '#6b7280', textDecoration: 'underline', marginTop: '20px', display: 'block' }}>
+                <Link to="/" className={styles.backLink}>
                     Voltar para a Loja
                 </Link>
             </div>

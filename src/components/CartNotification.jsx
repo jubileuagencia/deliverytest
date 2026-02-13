@@ -1,36 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './CartNotification.module.css';
 
-import { getAppConfig } from '../services/config';
-import { supabase } from '../lib/supabase';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
+import { useConfig } from '../context/ConfigContext';
 
 const CartNotification = ({ onClose, hasBottomNav }) => {
     const { cartItems } = useCart();
+    const { profile } = useAuth();
+    const { config } = useConfig();
+
     const itemCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
-    const [displayTotal, setDisplayTotal] = useState(0);
 
-    useEffect(() => {
-        const calcTotal = async () => {
-            const baseSubtotal = cartItems.reduce((sum, item) => sum + (Number(item.price) * item.quantity), 0);
+    const displayTotal = useMemo(() => {
+        const baseSubtotal = cartItems.reduce((sum, item) => sum + (Number(item.price) * item.quantity), 0);
 
-            // Simple fetch for notification (Logic duplication accepted for independence)
-            const { data: { user } } = await supabase.auth.getUser();
-            let tier = 'bronze';
-            if (user) {
-                const { data: profile } = await supabase.from('profiles').select('tier').eq('id', user.id).single();
-                if (profile) tier = profile.tier;
-            }
+        const tier = profile?.tier || 'bronze';
+        const discounts = config.tier_discounts || {};
+        const discountPercent = discounts[tier] || 0;
 
-            const config = await getAppConfig('tier_discounts');
-            const discountPercent = (config && config[tier]) || 0;
-            const final = baseSubtotal - (baseSubtotal * discountPercent);
-
-            setDisplayTotal(final);
-        };
-        calcTotal();
-    }, [cartItems]);
+        return baseSubtotal - (baseSubtotal * discountPercent);
+    }, [cartItems, profile?.tier, config.tier_discounts]);
 
     if (itemCount === 0) return null;
 

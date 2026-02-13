@@ -1,6 +1,6 @@
-# 🗄️ Database Schema (Verified v0.08)
+# 🗄️ Database Schema (Verified v0.09)
 
-Esquema atual do banco de dados (Public Schema), extraído via introspecção na v0.08.
+Esquema atual do banco de dados (Public Schema), extraído via introspecção na v0.09.
 
 ## Tabela: `app_config`
 Armazena configurações globais do aplicativo (ex: descontos).
@@ -77,4 +77,21 @@ Itens dentro de um pedido (Snapshot).
 *   `created_at` (timestamp)
 
 ---
-*Gerado automaticamente em 2026-02-06. Mantenha atualizado.*
+*Gerado automaticamente em 2026-02-06. Atualizado em 2026-02-13. Mantenha atualizado.*
+
+## Tabela: `cart_items`
+Itens no carrinho de compras do usuário logado.
+*   `id` (uuid, PK)
+*   `user_id` (uuid, FK -> auth.users.id)
+*   `product_id` (uuid, FK -> products.id)
+*   `quantity` (integer, Default: 1) - Quantidade do produto
+*   `created_at` (timestamp, Default: now())
+*   **Unique**: (`user_id`, `product_id`) — Um item por produto por usuário
+
+## Tabela: `favorites`
+Produtos marcados como favoritos pelo usuário.
+*   `id` (uuid, PK)
+*   `user_id` (uuid, FK -> auth.users.id)
+*   `product_id` (uuid, FK -> products.id)
+*   `created_at` (timestamp, Default: now())
+*   **Unique**: (`user_id`, `product_id`) — Um favorito por produto por usuário

@@ -73,21 +73,31 @@ export const addToCartDB = async (userId, product) => {
 
 export const updateQuantityDB = async (cartItemId, quantity) => {
     if (quantity < 1) return;
-    const { error } = await supabase
-        .from('cart_items')
-        .update({ quantity })
-        .eq('id', cartItemId);
+    try {
+        const { error } = await supabase
+            .from('cart_items')
+            .update({ quantity })
+            .eq('id', cartItemId);
 
-    if (error) throw error;
+        if (error) throw error;
+    } catch (error) {
+        console.error('Error updating cart item quantity:', error);
+        throw error;
+    }
 };
 
 export const removeFromCartDB = async (cartItemId) => {
-    const { error } = await supabase
-        .from('cart_items')
-        .delete()
-        .eq('id', cartItemId);
+    try {
+        const { error } = await supabase
+            .from('cart_items')
+            .delete()
+            .eq('id', cartItemId);
 
-    if (error) throw error;
+        if (error) throw error;
+    } catch (error) {
+        console.error('Error removing cart item:', error);
+        throw error;
+    }
 };
 
 export const clearCartDB = async (userId) => {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getAdminProducts } from '../../services/products';
 import AdminProductTable from './AdminProductTable';
-import styles from './AdminProductTable.module.css'; // Reusing container styles if needed, or create page styles
+import styles from './AdminProducts.module.css';
 
 const AdminProducts = () => {
     const [products, setProducts] = useState([]);
@@ -14,7 +14,6 @@ const AdminProducts = () => {
 
     const loadProducts = async () => {
         setLoading(true);
-        // Default to page 0, limit 100 for now to see list
         const { data, count } = await getAdminProducts(0, 100);
         setProducts(data || []);
         setLoading(false);
@@ -31,32 +30,16 @@ const AdminProducts = () => {
     };
 
     return (
-        <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+        <div className={styles.container}>
+            <div className={styles.header}>
                 <div>
-                    <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--text-primary)' }}>Gerenciar Produtos</h1>
-                    <p style={{ color: 'var(--text-secondary)' }}>Visualize e gerencie o catálogo da loja.</p>
+                    <h1 className={styles.title}>Gerenciar Produtos</h1>
+                    <p className={styles.subtitle}>Visualize e gerencie o catálogo da loja.</p>
                 </div>
-                {/* 
-                <button 
-                    style={{
-                        backgroundColor: 'var(--primary-color)',
-                        color: '#fff',
-                        border: 'none',
-                        padding: '10px 20px',
-                        borderRadius: '8px',
-                        cursor: 'pointer',
-                        fontWeight: '600'
-                    }}
-                    onClick={() => alert('Novo Produto')}
-                >
-                    + Novo Produto
-                </button>
-                */}
             </div>
 
             {loading ? (
-                <div style={{ padding: '40px', textAlign: 'center' }}>Carregando produtos...</div>
+                <div className={styles.loading}>Carregando produtos...</div>
             ) : (
                 <AdminProductTable
                     products={products}

@@ -57,14 +57,13 @@ const Header = () => {
 
           {/* Login / Profile */}
           {user ? (
-            <div className={styles.userSection} onClick={toggleMenu} style={{ cursor: 'pointer' }}>
-              {/* Simple avatar or text for now, using the styling available */}
-              <span className={styles.loginLink} style={{ background: '#F3F4F6', color: '#374151', width: 'auto', padding: '0 12px' }}>
+            <div className={styles.userSection} onClick={toggleMenu}>
+              <span className={styles.userBadge}>
                 {user.email?.split('@')[0]}
               </span>
             </div>
           ) : (
-            <Link to="/login" className={styles.loginLink} style={{ width: 'auto', padding: '0 16px' }}>
+            <Link to="/login" className={styles.loginLink}>
               Entrar
             </Link>
           )}
