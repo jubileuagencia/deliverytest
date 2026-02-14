@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import styles from './AuthForm.module.css';
 
 const AuthForm = ({ onSubmit, error, loading }) => {
-    const [isLogin, setIsLogin] = useState(true);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        onSubmit(isLogin, email, password);
+        onSubmit(true, email, password);
     };
 
     return (
         <div className={`glass-panel ${styles.formContainer}`}>
-            <h2 className={styles.title}>{isLogin ? 'Bem-vindo(a)' : 'Criar Conta'}</h2>
+            <h2 className={styles.title}>Bem-vindo(a)</h2>
 
             {error && <div className={styles.error}>{error}</div>}
 
@@ -44,15 +44,15 @@ const AuthForm = ({ onSubmit, error, loading }) => {
                 </div>
 
                 <button type="submit" className={styles.submitButton} disabled={loading}>
-                    {loading ? 'Processando...' : (isLogin ? 'Entrar' : 'Cadastrar')}
+                    {loading ? 'Processando...' : 'Entrar'}
                 </button>
             </form>
 
             <p className={styles.switchText}>
-                {isLogin ? "Não tem uma conta? " : "Já tem uma conta? "}
-                <button className={styles.switchButton} onClick={() => setIsLogin(!isLogin)}>
-                    {isLogin ? 'Cadastrar' : 'Entrar'}
-                </button>
+                Não tem uma conta?{' '}
+                <Link to="/cadastro" className={styles.switchButton}>
+                    Cadastrar
+                </Link>
             </p>
         </div>
     );

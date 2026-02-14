@@ -37,3 +37,4 @@ scripts/
 .env
 database/
 script/
+relatorios/
