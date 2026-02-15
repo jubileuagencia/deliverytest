@@ -1,7 +1,7 @@
 {
   "name": "c-teste-2",
   "private": true,
-  "version": "0.0.6",
+  "version": "0.2.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -11,10 +11,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.91.1",
+    "@supabase/supabase-js": "^2.95.3",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "helmet": "^8.1.0",
+    "pdf-lib": "^1.17.1",
     "puppeteer": "^24.37.3",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",

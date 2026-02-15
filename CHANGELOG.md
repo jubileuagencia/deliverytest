@@ -5,6 +5,31 @@ Todos as alterações notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 e este projeto adere ao [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.2] - 2026-02-14
+### 🚀 Added (Admin & Integrações)
+
+#### 📊 Gestão de Produtos (Admin Products)
+*   **Busca & Filtros**:
+    *   Barra de busca em tempo real (Nome/ID).
+    *   Filtros de status (Ativo/Inativo/Todos).
+    *   Filtro de Baixo Estoque.
+*   **Ações em Massa (Bulk Actions)**:
+    *   Seleção múltipla de produtos via Checkbox.
+    *   Barra de ações flutuante (Ativar, Desativar, Excluir selecionados).
+    *   **Mobile Support**: Header específico para mobile com "Selecionar Todos".
+
+#### 📈 Integração Google Sheets (v2.2)
+*   **Sincronização Bidirecional**: Script Google Apps Script robusto para conectar Planilha <-> Supabase.
+*   **Multi-Abas**:
+    *   `Preços`: Aba de edição massiva (Nome, Preço, Categoria, Descrição, Status).
+    *   `Cadastro`: Aba de criação de novos produtos.
+*   **UX Avançada na Planilha**:
+    *   **Dropdowns Automáticos**: Categorias, Unidades e Status já vêm validados do banco.
+    *   **Validação de Dados**: Proteção contra IDs inválidos, preços errados e categorias inexistentes.
+*   **Correções de Schema**: Remoção de colunas legadas (`cost_price`, `stock_quantity`) e suporte a `unit` e `description`.
+
+---
+
 ## [v0.10] - 2026-02-13
 ### 🚀 Added (Novidades)
 

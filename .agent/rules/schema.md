@@ -1,6 +1,6 @@
-# 🗄️ Database Schema (Verified v0.09)
+# 🗄️ Database Schema (Verified v0.10)
 
-Esquema atual do banco de dados (Public Schema), extraído via introspecção na v0.09.
+Esquema atual do banco de dados (Public Schema), verificado em 14/02/2026.
 
 ## Tabela: `app_config`
 Armazena configurações globais do aplicativo (ex: descontos).
@@ -23,12 +23,12 @@ Catálogo de produtos.
 *   `name` (text)
 *   `description` (text)
 *   `price` (numeric)
-*   `unit` (text) - Unidade de medida (ex: 'kg', 'un')
+*   `unit` (text, Default: 'un') - Unidade de medida ('un', 'kg', 'cx', 'maco', 'dz')
 *   `image_url` (text)
 *   `category_id` (uuid, FK -> categories.id)
-*   `stock_quantity` (integer)
-*   `is_active` (boolean, Default: true) - [NEW] Status visibilidade
-*   `display_id` (integer, Auto-Inc) - [NEW] ID Amigável para exibição
+*   `is_active` (boolean, Default: true) - Status visibilidade
+*   `deleted_at` (timestamp) - Soft Delete (se preenchido, produto foi excluído)
+*   `display_id` (integer, Auto-Inc) - ID Amigável para exibição
 *   `created_at` (timestamp)
 
 ## Tabela: `profiles`
