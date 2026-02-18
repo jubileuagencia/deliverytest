@@ -14,10 +14,12 @@ const AdminRoute = () => {
         return <Navigate to="/login" replace />;
     }
 
-    if (profile?.role !== 'admin') {
+    const isAdmin = profile?.role === 'admin' || profile?.role === 'super_admin';
+
+    if (!isAdmin) {
         return (
             <div className={styles.denied}>
-                <h1>Você não é admin</h1>
+                <h1>Acesso Negado</h1>
                 <p>Esta área é restrita para administradores.</p>
                 <Link to="/" className={styles.backLink}>
                     Voltar para a Loja

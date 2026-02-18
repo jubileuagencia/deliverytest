@@ -5,6 +5,32 @@ Todos as alterações notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 e este projeto adere ao [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.3] - 2026-02-18
+### 🚀 Added (Admin Clients & Security)
+
+#### 👥 Gestão de Clientes (Admin Clients)
+*   **CRUD Completo**:
+    *   Listagem paginada com busca inteligente (Nome, Email, CNPJ).
+    *   Edição de Perfil (Role, Tier, Dados Cadastrais) e Endereços.
+    *   **Filtros Avançados**: Multi-seleção por Nível (Bronze/Prata/Ouro) e Tipo (Cliente/Admin).
+*   **Super Admin**:
+    *   Proteção hierárquica: Apenas Super Admins podem promover outros Admins.
+    *   Badge visual distintivo na listagem.
+*   **UX Premium**:
+    *   **Feedback Inline**: Substituição de `alert()` por mensagens de status não-intrusivas.
+    *   **Performance**: Componentes extraídos (`MultiSelectFilter`, `TierBadge`) para evitar re-renders.
+
+#### 🔒 Segurança (Phase 10)
+*   **Secure RPCs**:
+    *   `get_admin_clients`: Função segura para listar usuários (sem expor hash de senha).
+    *   `update_admin_user_email`: Função restrita para troca de emails.
+*   **Input Sanitization**: Limpeza automática de caracteres não-numéricos em buscas de CPF/CNPJ.
+
+### 🔧 Changed
+*   **Refatoração CSS**: Centralização de estilos e criação de `src/pages/admin/components` para melhor organização.
+
+---
+
 ## [v0.2] - 2026-02-14
 ### 🚀 Added (Admin & Integrações)
 
