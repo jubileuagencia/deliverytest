@@ -5,8 +5,35 @@ Todos as alterações notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 e este projeto adere ao [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.4] - 2026-02-20
+### 🚀 Added (Admin Orders & UX)
+
+#### 📦 Gestão de Pedidos (Admin Orders)
+*   **Painel Completo**:
+    *   Listagem paginada de todos os pedidos da plataforma.
+    *   **Friendly ID**: Pedidos agora usam numeração sequencial (ex: #1006) em vez de UUIDs longos visíveis aos usuários e painéis.
+    *   Visualização de Detalhes (Modal moderno com itens, valores, cliente e endereço).
+*   **Ações em Massa (Bulk Actions)**:
+    *   Seleção múltipla de pedidos via Checkboxes.
+    *   Floating Action Bar na parte inferior para alteração rápida de Status em dezenas de pedidos de uma vez.
+*   **Busca Universal (Smart Search)**:
+    *   Campo único inteligente que identifica e roteia a busca automaticamente por: Número do Pedido (#ID), Nome da Empresa ou parte do CNPJ.
+
+#### 🖥️ UX & Layout
+*   **Sidebar Responsiva**:
+    *   Ajuste do breakpoint de mobile/tablet para 1024px.
+    *   Colapso Total no Desktop: Novo botão interno (`<`) para recolher o painel lateral e maximizar o espaço de trabalho em telas grandes, com botão "Hambúrguer" flutuante de restauração.
+
+### 🔒 Fixed (Security & RLS)
+*   **Correção de RLS (Super Admin)**:
+    *   *Bugfix crítico*: Políticas do Supabase bloqueavam silenciosamente a edição de Pedidos, Produtos e Clientes por contas baseadas em `super_admin`.
+    *   Execução das Migrations Integradas (024, 025, 026, 027) para garantir permissões de `UPDATE`/`INSERT`/`DELETE` híbridas ao painel de gestão.
+*   **Erros 406 (Not Acceptable) Evitados**:
+    *   Eliminação do Erro `406` e `Cannot Coerce` nas Modais ao salvar entidades. O frontend agora atua via Estado Otimista, não dependendo de ecos estritos/incondicionais da API PostgREST que conflitam com views protegidas.
+
+---
+
 ## [v0.3] - 2026-02-18
-### 🚀 Added (Admin Clients & Security)
 
 #### 👥 Gestão de Clientes (Admin Clients)
 *   **CRUD Completo**:

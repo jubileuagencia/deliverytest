@@ -57,7 +57,8 @@ Endereços de entrega dos usuários.
 ## Tabela: `orders`
 Pedidos realizados.
 *   `id` (uuid, PK)
-*   `user_id` (uuid, FK -> auth.users.id)
+*   `order_number` (integer, Auto-Inc) - ID Amigável (Começa em 1000) [NEW]
+*   `user_id` (uuid, FK -> profiles.id) [NEW FK]
 *   `status` (enum) - 'pending', 'approved', 'preparing', 'shipped', 'delivered', 'rejected', 'cancelled'
 *   `payment_method` (enum) - 'pix', 'boleto'
 *   `subtotal` (numeric)

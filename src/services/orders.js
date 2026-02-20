@@ -142,6 +142,7 @@ export const getOrderDetails = async (orderId) => {
             .from('orders')
             .select(`
                 *,
+                profile:profiles(company_name, phone, cnpj),
                 address:user_addresses (*),
                 items:order_items (
                     *,
@@ -155,6 +156,87 @@ export const getOrderDetails = async (orderId) => {
         return data;
     } catch (error) {
         console.error('Error fetching order details:', error);
+        throw error;
+    }
+};
+
+// Admin: Get Orders List with Pagination and Filtering
+export const getAdminOrders = async (page = 1, limit = 50, searchTerm = '', statusFilters = []) => {
+    try {
+        let query = supabase
+            .from('orders')
+            .select(`
+                *,
+                profile:profiles!inner(company_name, phone, cnpj),
+                address:user_addresses(district, city, state),
+                items:order_items(quantity, total_price)
+            `, { count: 'exact' });
+
+        if (statusFilters && statusFilters.length > 0) {
+            query = query.in('status', statusFilters);
+        }
+
+        if (searchTerm) {
+            const cleanTerm = searchTerm.trim();
+            const onlyNumbers = cleanTerm.replace(/\D/g, '');
+
+            // If the user explicitly looks for an order number (e.g., #10045) or types a short numeric value
+            if (cleanTerm.startsWith('#') || (onlyNumbers === cleanTerm && cleanTerm.length > 0 && cleanTerm.length <= 8)) {
+                const orderNum = parseInt(onlyNumbers, 10);
+                if (!isNaN(orderNum)) {
+                    query = query.eq('order_number', orderNum);
+                }
+            } else {
+                // Search by company_name or CNPJ on the joined profile table
+                // For joined tables, Supabase JS uses the `foreignTable` option matching the relationship alias
+                query = query.or(`company_name.ilike.%${cleanTerm}%,cnpj.ilike.%${cleanTerm}%`, { foreignTable: 'profile' });
+            }
+        }
+
+        const from = (page - 1) * limit;
+        const to = from + limit - 1;
+
+        const { data, count, error } = await query
+            .order('created_at', { ascending: false })
+            .range(from, to);
+
+        if (error) throw error;
+
+        return { data, total_count: count };
+    } catch (error) {
+        console.error('Error fetching admin orders:', error);
+        throw error;
+    }
+};
+
+// Admin: Update Order Status
+export const updateOrderStatus = async (orderId, newStatus) => {
+    try {
+        const { data, error } = await supabase
+            .from('orders')
+            .update({ status: newStatus })
+            .eq('id', orderId);
+
+        if (error) throw error;
+        return data;
+    } catch (error) {
+        console.error('Error updating order status:', error);
+        throw error;
+    }
+};
+
+// Admin: Bulk Update Order Status
+export const updateOrdersStatus = async (orderIds, newStatus) => {
+    try {
+        const { data, error } = await supabase
+            .from('orders')
+            .update({ status: newStatus })
+            .in('id', orderIds);
+
+        if (error) throw error;
+        return data;
+    } catch (error) {
+        console.error('Error bulk updating orders status:', error);
         throw error;
     }
 };

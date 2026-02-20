@@ -47,7 +47,7 @@ const OrderDetailsPage = () => {
                 <button onClick={() => navigate(-1)} className={styles.backButton}>
                     ← Voltar
                 </button>
-                <h3>Detalhes do Pedido</h3>
+                <h3>Pedido #{order.order_number}</h3>
             </div>
 
             <div className={styles.statusBanner} style={{ backgroundColor: statusInfo.color + '20', color: statusInfo.color }}>

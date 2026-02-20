@@ -42,7 +42,7 @@ const MultiSelectFilter = ({ label, options, selectedValues, onChange }) => {
                         <label key={opt.value} className={styles.filterOption}>
                             <input
                                 type="checkbox"
-                                checked={selectedValues.includes(opt.value)}
+                                checked={selectedValues?.includes(opt.value) || false}
                                 onChange={() => toggleOption(opt.value)}
                             />
                             {opt.label}

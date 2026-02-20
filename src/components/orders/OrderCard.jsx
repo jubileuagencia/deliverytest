@@ -28,7 +28,7 @@ const OrderCard = ({ order }) => {
             <div className={styles.header}>
                 <div className={styles.store}>
                     <div className={styles.storeIcon}>🛍️</div>
-                    <span className={styles.storeName}>Jubileu Distribuidora</span> {/* Hardcoded for v0.08 */}
+                    <span className={styles.storeName}>Pedido #{order.order_number}</span>
                 </div>
                 <div className={styles.status} style={{ color: statusInfo.color }}>
                     {statusInfo.label} {statusInfo.icon}

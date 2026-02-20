@@ -20,11 +20,34 @@
     margin-bottom: 40px;
 }
 
+.headerTitleRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
 .sidebarHeader h2 {
     font-size: 1.5rem;
     color: var(--primary-color, #10b981);
     /* Fallback to green if var not set */
-    margin-bottom: 5px;
+    margin: 0;
+}
+
+.closeSidebarBtn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    border-radius: 4px;
+}
+
+.closeSidebarBtn:hover {
+    background-color: var(--bg-secondary);
 }
 
 .userEmail {
@@ -97,6 +120,43 @@
     /* Width of sidebar */
     padding: 30px;
     max-width: 100%;
+    transition: margin-left 0.3s ease-in-out;
+}
+
+/* Desktop Sidebar Collapse States */
+.sidebar {
+    transition: left 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.sidebarCollapsed {
+    transform: translateX(-100%);
+}
+
+.desktopCollapsed .content {
+    margin-left: 0;
+}
+
+.hamburger.desktopHamburger {
+    display: none;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 30;
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: var(--shadow-sm);
+}
+
+.hamburger.desktopHamburger:hover {
+    background-color: var(--bg-secondary);
+}
+
+@media (min-width: 1025px) {
+    .hamburger.desktopHamburger.showDesktopHamburger {
+        display: flex;
+    }
 }
 
 /* Mobile Header (Hidden on Desktop) */
@@ -174,7 +234,7 @@
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
     .adminContainer {
         flex-direction: column;
         padding-top: 60px;
@@ -195,6 +255,17 @@
         z-index: 50;
         transition: left 0.3s ease-in-out;
         box-shadow: 4px 0 16px rgba(0, 0, 0, 0.1);
+        transform: none;
+        /* override desktop collapse */
+    }
+
+    .closeSidebarBtn {
+        display: none;
+        /* Mobile naturally closes on click outside */
+    }
+
+    .hamburger.desktopHamburger {
+        display: none !important;
     }
 
     .sidebar.show {

@@ -7,6 +7,7 @@ const AdminLayout = () => {
     const { logout, user } = useAuth();
     const location = useLocation();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+    const [isDesktopCollapsed, setIsDesktopCollapsed] = React.useState(false);
 
     const isActive = (path) => location.pathname === path;
 
@@ -19,7 +20,19 @@ const AdminLayout = () => {
     };
 
     return (
-        <div className={styles.adminContainer}>
+        <div className={`${styles.adminContainer} ${isDesktopCollapsed ? styles.desktopCollapsed : ''}`}>
+
+            {/* Desktop Floating Hamburger (Visible only when collapsed) */}
+            <button
+                className={`${styles.hamburger} ${styles.desktopHamburger} ${isDesktopCollapsed ? styles.showDesktopHamburger : ''}`}
+                onClick={() => setIsDesktopCollapsed(false)}
+                aria-label="Expandir Menu"
+            >
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
             {/* Mobile Header with Hamburger */}
             <div className={styles.mobileHeader}>
                 <h2>Levee Admin</h2>
@@ -37,9 +50,20 @@ const AdminLayout = () => {
             {/* Overlay for mobile */}
             {isMobileMenuOpen && <div className={styles.overlay} onClick={closeMobileMenu}></div>}
 
-            <aside className={`${styles.sidebar} ${isMobileMenuOpen ? styles.show : ''}`}>
+            <aside className={`${styles.sidebar} ${isMobileMenuOpen ? styles.show : ''} ${isDesktopCollapsed ? styles.sidebarCollapsed : ''}`}>
                 <div className={styles.sidebarHeader}>
-                    <h2>Levee Admin</h2>
+                    <div className={styles.headerTitleRow}>
+                        <h2>Levee Admin</h2>
+                        <button
+                            className={styles.closeSidebarBtn}
+                            onClick={() => setIsDesktopCollapsed(true)}
+                            title="Recolher Menu"
+                        >
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <polyline points="15 18 9 12 15 6"></polyline>
+                            </svg>
+                        </button>
+                    </div>
                     <p className={styles.userEmail}>{user?.email}</p>
                 </div>
 

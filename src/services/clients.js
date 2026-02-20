@@ -65,9 +65,7 @@ export const updateClientProfile = async (clientId, updates) => {
         const { data, error } = await supabase
             .from('profiles')
             .update(updates)
-            .eq('id', clientId)
-            .select()
-            .single();
+            .eq('id', clientId);
 
         if (error) throw error;
         return data;
@@ -105,9 +103,7 @@ export const addClientAddress = async (addressData) => {
     try {
         const { data, error } = await supabase
             .from('user_addresses')
-            .insert(addressData)
-            .select()
-            .single();
+            .insert(addressData);
 
         if (error) throw error;
         return data;
@@ -122,9 +118,7 @@ export const updateClientAddress = async (addressId, updates) => {
         const { data, error } = await supabase
             .from('user_addresses')
             .update(updates)
-            .eq('id', addressId)
-            .select()
-            .single();
+            .eq('id', addressId);
 
         if (error) throw error;
         return data;

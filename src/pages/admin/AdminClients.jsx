@@ -5,6 +5,7 @@ import ClientDetailsModal from './ClientDetailsModal';
 import { useClickOutside } from '../../hooks/useClickOutside';
 import MultiSelectFilter from './components/MultiSelectFilter';
 import TierBadge from './components/TierBadge';
+import styles from './AdminClients.module.css';
 
 const TIER_OPTIONS = [
     { value: 'bronze', label: 'Bronze' },
@@ -129,7 +130,7 @@ const AdminClients = () => {
                         type="text"
                         placeholder="Buscar cliente..."
                         className={styles.searchInput}
-                        value={searchTerm}
+                        value={searchTerm || ''}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
                 </div>

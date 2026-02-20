@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { updateClientProfile, getClientDetails, addClientAddress, updateClientAddress, deleteClientAddress } from '../../services/clients';
 import { validateCNPJ, formatCNPJ, formatPhone } from '../../utils/validation';
+import TierBadge from './components/TierBadge';
 import styles from './ClientDetailsModal.module.css';
 
 const TIER_OPTIONS = [
@@ -240,6 +241,7 @@ const ClientDetailsModal = ({ client, onClose, onUpdate }) => {
                             errors={errors}
                             loading={loading}
                             currentUserRole={currentUserRole}
+                            originalTier={client.tier} // Passaing original tier
                         />
                     ) : (
                         <AddressManager
@@ -272,7 +274,7 @@ const ClientDetailsModal = ({ client, onClose, onUpdate }) => {
 };
 
 // Sub-components for cleaner code
-const GeneralForm = ({ formData, onChange, onBlur, errors, loading, currentUserRole }) => {
+const GeneralForm = ({ formData, onChange, onBlur, errors, loading, currentUserRole, originalTier }) => {
 
     const canEditRole = () => {
         if (!currentUserRole) return false;
@@ -285,7 +287,14 @@ const GeneralForm = ({ formData, onChange, onBlur, errors, loading, currentUserR
     return (
         <>
             <div className={styles.formGroup}>
-                <label>Nível de Fidelidade (Tier)</label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    Nível de Fidelidade (Tier)
+                    {originalTier && (
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.8rem', color: '#666', fontWeight: 'normal' }}>
+                            (Atual: <TierBadge tier={originalTier} />)
+                        </span>
+                    )}
+                </label>
                 <div className={styles.tierOptions}>
                     {TIER_OPTIONS.map(tier => (
                         <label
@@ -316,7 +325,7 @@ const GeneralForm = ({ formData, onChange, onBlur, errors, loading, currentUserR
                 <input
                     type="text"
                     name="company_name"
-                    value={formData.company_name}
+                    value={formData.company_name || ''}
                     onChange={onChange}
                     className={styles.input}
                 />
@@ -327,7 +336,7 @@ const GeneralForm = ({ formData, onChange, onBlur, errors, loading, currentUserR
                 <input
                     type="email"
                     name="email"
-                    value={formData.email}
+                    value={formData.email || ''}
                     onChange={onChange}
                     className={styles.input}
                     placeholder="email@exemplo.com"
@@ -339,7 +348,7 @@ const GeneralForm = ({ formData, onChange, onBlur, errors, loading, currentUserR
                 <input
                     type="text"
                     name="cnpj"
-                    value={formData.cnpj}
+                    value={formData.cnpj || ''}
                     onChange={(e) => onChange({ target: { name: 'cnpj', value: formatCNPJ(e.target.value) } })}
                     onBlur={onBlur} // Added onBlur
                     maxLength={18}
@@ -353,7 +362,7 @@ const GeneralForm = ({ formData, onChange, onBlur, errors, loading, currentUserR
                 <input
                     type="text"
                     name="phone"
-                    value={formData.phone}
+                    value={formData.phone || ''}
                     onChange={(e) => onChange({ target: { name: 'phone', value: formatPhone(e.target.value) } })}
                     maxLength={15}
                     className={styles.input}
@@ -364,7 +373,7 @@ const GeneralForm = ({ formData, onChange, onBlur, errors, loading, currentUserR
                 <label>Função (Apenas Admins podem alterar)</label>
                 <select
                     name="role"
-                    value={formData.role}
+                    value={formData.role || 'customer'}
                     onChange={onChange}
                     className={styles.select}
                     disabled={!canEditRole()}
@@ -393,6 +402,7 @@ const AddressManager = ({ addresses, editingAddress, setEditingAddress, onSave, 
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
+        // BUG FIX: Spread the PREVIOUS state correctly so other fields are not lost/undefined
         setForm(prev => ({
             ...prev,
             [name]: type === 'checkbox' ? checked : value
@@ -405,35 +415,35 @@ const AddressManager = ({ addresses, editingAddress, setEditingAddress, onSave, 
                 <h3>{form.id ? 'Editar Endereço' : 'Novo Endereço'}</h3>
                 <div className={styles.formGroup}>
                     <label>CEP</label>
-                    <input name="zip_code" value={form.zip_code} onChange={handleChange} className={styles.input} />
+                    <input name="zip_code" value={form.zip_code || ''} onChange={handleChange} className={styles.input} />
                 </div>
                 <div className={styles.formGroup}>
                     <label>Rua</label>
-                    <input name="street" value={form.street} onChange={handleChange} className={styles.input} />
+                    <input name="street" value={form.street || ''} onChange={handleChange} className={styles.input} />
                 </div>
                 <div style={{ display: 'flex', gap: 10 }}>
                     <div className={styles.formGroup} style={{ flex: 1 }}>
                         <label>Número</label>
-                        <input name="number" value={form.number} onChange={handleChange} className={styles.input} />
+                        <input name="number" value={form.number || ''} onChange={handleChange} className={styles.input} />
                     </div>
                     <div className={styles.formGroup} style={{ flex: 2 }}>
                         <label>Bairro</label>
-                        <input name="district" value={form.district} onChange={handleChange} className={styles.input} />
+                        <input name="district" value={form.district || ''} onChange={handleChange} className={styles.input} />
                     </div>
                 </div>
                 <div style={{ display: 'flex', gap: 10 }}>
                     <div className={styles.formGroup} style={{ flex: 3 }}>
                         <label>Cidade</label>
-                        <input name="city" value={form.city} onChange={handleChange} className={styles.input} />
+                        <input name="city" value={form.city || ''} onChange={handleChange} className={styles.input} />
                     </div>
                     <div className={styles.formGroup} style={{ flex: 1 }}>
                         <label>UF</label>
-                        <input name="state" value={form.state} onChange={handleChange} className={styles.input} />
+                        <input name="state" value={form.state || ''} onChange={handleChange} className={styles.input} />
                     </div>
                 </div>
                 <div className={styles.formGroup}>
                     <label>
-                        <input type="checkbox" name="is_main" checked={form.is_main} onChange={handleChange} />
+                        <input type="checkbox" name="is_main" checked={form.is_main || false} onChange={handleChange} />
                         {' '}Endereço Principal?
                     </label>
                 </div>

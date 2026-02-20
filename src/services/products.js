@@ -199,9 +199,7 @@ export const deleteProduct = async (id) => {
                 deleted_at: new Date().toISOString(),
                 is_active: false
             })
-            .eq('id', id)
-            .select()
-            .single();
+            .eq('id', id);
 
         if (error) throw error;
         return data;
@@ -219,9 +217,7 @@ export const toggleProductStatus = async (id, isActive) => {
         const { data, error } = await supabase
             .from('products')
             .update({ is_active: isActive })
-            .eq('id', id)
-            .select()
-            .single();
+            .eq('id', id);
 
         if (error) throw error;
         return data;
@@ -238,8 +234,7 @@ export const bulkUpdateStatus = async (ids, isActive) => {
         const { data, error } = await supabase
             .from('products')
             .update({ is_active: isActive })
-            .in('id', ids)
-            .select();
+            .in('id', ids);
 
         if (error) throw error;
         return data;
@@ -260,8 +255,7 @@ export const bulkDeleteProducts = async (ids) => {
                 deleted_at: new Date().toISOString(),
                 is_active: false
             })
-            .in('id', ids)
-            .select();
+            .in('id', ids);
 
         if (error) throw error;
         return data;
