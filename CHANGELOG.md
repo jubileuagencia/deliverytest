@@ -28,6 +28,8 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 *   **Correção de RLS (Super Admin)**:
     *   *Bugfix crítico*: Políticas do Supabase bloqueavam silenciosamente a edição de Pedidos, Produtos e Clientes por contas baseadas em `super_admin`.
     *   Execução das Migrations Integradas (024, 025, 026, 027) para garantir permissões de `UPDATE`/`INSERT`/`DELETE` híbridas ao painel de gestão.
+*   **CSP para Supabase Realtime**:
+    *   *Bugfix*: Adicionado `wss://` à diretiva `connectSrc` no `server.js` (capacitando o capacete - helmet) para evitar bloqueios de conexão WebSocket do Supabase Realtime em produção.
 *   **Erros 406 (Not Acceptable) Evitados**:
     *   Eliminação do Erro `406` e `Cannot Coerce` nas Modais ao salvar entidades. O frontend agora atua via Estado Otimista, não dependendo de ecos estritos/incondicionais da API PostgREST que conflitam com views protegidas.
 

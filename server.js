@@ -20,6 +20,7 @@ if (process.env.NODE_ENV === 'production') {
                     connectSrc: [
                         "'self'",
                         "https://qnvlzzprxgragohfwsnc.supabase.co",
+                        "wss://qnvlzzprxgragohfwsnc.supabase.co",
                         "https://jubileuagencia.app.n8n.cloud"
                     ],
                     imgSrc: ["'self'", "data:", "https://qnvlzzprxgragohfwsnc.supabase.co", "https://images.unsplash.com"],
